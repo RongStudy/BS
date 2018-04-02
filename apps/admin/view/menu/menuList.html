@@ -1,0 +1,175 @@
+{extend name="base/main"}
+{block name="body"}
+<style type="text/css">
+    a{
+        text-decoration: none!important;
+    }
+    .red{
+        color: red;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 菜单管理 
+    <span class="c-gray en">&gt;</span> 菜单列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+    <!-- <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+            </a>
+            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            </a>
+        </span>
+    </div> -->
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+            <tr>
+                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong>{$count}</strong> 条</span></th>
+
+            </tr>
+            <tr class="text-c">
+                <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+                <th width="40">ID</th>
+                <th width="150">标题</th>
+                <th width="90">上级分类</th>
+                <th width="90">排序</th>
+                <th width="150">Url</th>
+                <th width="130">是否已隐藏</th>
+                <th width="100">是否已启用</th>
+                <th width="100">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {php}$count = 1;{/php}
+            {volist name="list" id="vo"}
+            <tr class="text-c">
+                <!-- <td><input type="checkbox" value="1" name=""></td> -->
+                <td>{php}echo $count;{/php}</td>
+                <td>
+                {if condition="($vo.pid == 0)"}
+                    <a href="{:url('Menu/menuList', ['pid'=>$vo['id'], 'title'=>$vo['title']])}" title="查看下级分类" class="red">{$vo.title}</a>
+                    {else /}
+                    <a href="#">{$vo.title}</a>
+                {/if}
+                </td>
+                <td>
+                {if condition="($vo.pid == 0)"}无
+                    {else /}
+                    {$title}
+                {/if}
+                </td>
+                <td>{$vo.sort}</td>
+                <td>{$vo.url}</td>
+                <td>
+                    {if condition="($vo.hide == 1)"}
+                    <span class="label label-success radius">未隐藏</span>
+                        {else /}
+                    <span class="label label-warning radius">已隐藏</span>
+                    {/if}
+                </td>
+                <td>
+                    {if condition="($vo.status == 1)"}
+                    <span class="label label-success radius">已启用</span>
+                        {else /}
+                    <span class="label label-warning radius">未启用</span>
+                    {/if}
+                </td>
+                <td class="td-manage">
+                    {if condition="($vo.url neq 'Menu/menuList')"}
+                        {if condition="($vo.status == 1)"}
+                            <a onclick="stopOrStartMenu({$vo.id}, 2)"><i class="Hui-iconfont">&#xe631;</i>停用</a>
+                            {else /}
+                            <a onclick="stopOrStartMenu({$vo.id}, 1)"><i class="Hui-iconfont">&#xe601;</i>启用</a>
+                        {/if}
+                        <a href="{:url('Menu/menuEdit', ['ids'=>$vo['id']])}" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
+                        <a onclick="menuDel({$vo.id}, {$vo.pid})" class="ml-5"><i class="Hui-iconfont">&#xe6e2;</i>删除</a>
+                    {else /}
+                        <label for="" style="color: orange;">禁止操作</label>
+                    {/if}
+                </td>
+            </tr>
+            {php}$count++;{/php}
+            {/volist}
+        </tbody>
+    </table>
+    {$list->render()}
+</div>
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
+<script>
+    /**
+     * 停用启用菜单
+     * @param  {[type]} ids    [description]
+     * @param  {[type]} status [description]
+     * @return {[type]}        [description]
+     */
+    function stopOrStartMenu(ids, status){
+        $.ajax({
+            type: 'post',
+            data: {ids: ids, status: status},
+            dataType: 'json',
+            url: '{:url("Menu/stopOrStartMenu")}',
+            success: function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg);
+                    setTimeout(function(){
+                        window.parent.location.reload();
+                    },1000);
+                    // location.reload();
+                }else{
+                    layer.msg(ret.msg);
+                    return false;
+                }
+            },
+            error: function(XmlHttpRequest, textStatus, errorThrown){
+                layer.msg('系统错误！',{icon:5,time:2000});
+            }
+        });
+    }
+
+    /**
+     * 删除菜单
+     * @param  {[type]} ids  [description]
+     * @param  {[type]} pids [description]
+     * @return {[type]}      [description]
+     */
+    function menuDel(ids, pids){
+        layer.confirm('确定要删除吗？', {
+            icon: 7,
+            title: '警告',
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type: 'post',
+                data: {ids: ids, pids:pids},
+                dataType: 'json',
+                url: '{:url("Menu/menuDel")}',
+                success: function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg);
+                        setTimeout(function(){
+                            window.parent.location.reload();
+                        },2000);
+                        // location.reload();
+                    }else{
+                        layer.msg(ret.msg);
+                        return false;
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    layer.msg('系统错误，请稍候再试！',{icon:5,time:2000});
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+        
+    }
+</script>
+
+{/block}

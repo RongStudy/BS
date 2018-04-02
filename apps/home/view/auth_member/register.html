@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link type="text/css" rel="stylesheet" href="{$static}/css/style.css" />
+    <!--[if IE 6]>
+    <script src="js/iepng.js" type="text/javascript"></script>
+        <script type="text/javascript">
+           EvPNG.fix('div, ul, img, li, input, a'); 
+        </script>
+    <![endif]-->      
+    <script type="text/javascript" src="{$static}/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/validate/jquery.validate.min.js"></script>
+    <!--Begin Header Begin-->
+    <style type="text/css">
+        .captcha{
+            width: 100px; height: 34px; display: inline-block;
+        }
+        #captcha_img{
+            width:120px; height:40px; position: relative; top: 16px; display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="soubg">
+    <div class="sou">
+        <span class="fr">
+            <span class="fl" style="width: 150px;">
+                你好，请<a href="Login.html">登录</a>&nbsp; 
+                <a href="Regist.html" style="color:#ff4e00;">免费注册</a>&nbsp; 
+            </span>
+            <span class="fl">|&nbsp;关注我们：</span>
+            <span class="s_sh"><a href="#" class="sh2">微信</a></span>
+        </span>
+    </div>
+</div>
+
+<!--End Header End--> 
+<!--Begin Login Begin-->
+<div class="log_bg">    
+    <div class="top">
+        <div class="logo">
+            <a href="Index.html"><img src="{$static}/images/logo.png" /></a>
+        </div>
+        <div class="div_show_s">
+            <img src="{$static}/images/wx.jpg" width="120px" height="120px;">
+        </div>
+    </div>
+    <div class="regist">
+        <div class="log_img"><img src="{$static}/images/l_img.png" width="611" height="425" /></div>
+        <div class="reg_c">
+            <form id="regForm">
+                <table border="0" style="width:420px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+                    <tr height="50" valign="top">
+                        <td width="95">&nbsp;</td>
+                        <td>
+                            <span class="fl" style="font-size:24px;">注册</span>
+                            <span class="fr">已有商城账号，<a href="{:url('AuthMember/login')}" style="color:#ff4e00;">我要登录</a></span>
+                        </td>
+                    </tr>
+                    <tr height="50">
+                        <td align="right">
+                            <font color="#ff4e00">*</font>&nbsp;用户昵称 &nbsp;
+                        </td>
+                         <td><input type="text" value="" name="uName" class="l_user" /></td>
+                    </tr>
+                    <tr height="50">
+                        <td align="right"><font color="#ff4e00">*</font>&nbsp;用户密码 &nbsp;</td>
+                        <td><input type="password" value="" name="uPwd" id="uPwd" class="l_pwd" /></td>
+                    </tr>
+                    <tr height="50">
+                        <td align="right"><font color="#ff4e00">*</font>&nbsp;确认密码 &nbsp;</td>
+                        <td><input type="password" value="" name="rePwd" id="rePwd" class="l_pwd" /></td>
+                    </tr>
+                    <!-- <tr height="50">
+                        <td align="right"><font color="#ff4e00">*</font>&nbsp;用户邮箱 &nbsp;</td>
+                        <td><input type="text" value="" name="uEmail" class="l_email" /></td>
+                    </tr> -->
+                    <tr height="50">
+                        <td align="right"><font color="#ff4e00">*</font>&nbsp;用户手机 &nbsp;</td>
+                        <td><input type="text" value="" name="uPhone" class="l_tel" /></td>
+                    </tr>
+                    <tr height="50">
+                        <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
+                        <td>
+                            <input type="text" value="" name="captcha" class="captcha" />
+                            <img class="" src="{:captcha_src()}" id="captcha_img" onclick="refreshcaptcha();" />
+                            <a id="kanbuq" href="javascript:;"onclick="refreshcaptcha();">换一张</a> 
+                            <!-- /*<a href="#" style="font-size:12px; font-family:'宋体';">换一张</a>*/ -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="font-size:12px; padding-top:20px;">
+                            <span style="font-family:'宋体';" class="fl">
+                                <label class="r_rad"><input type="checkbox" id="check" /></label><label class="r_txt">我已阅读并接受《用户协议》</label>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr height="60">
+                        <td>&nbsp;</td>
+                        <td><input type="submit" value="立即注册" class="submit log_btn" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<!--End Login End--> 
+<!--Begin Footer Begin-->
+<div class="btmbg">
+    <div class="btm">
+        Author for 小青年<br />
+        <img src="{$static}/images/b_1.gif" width="98" height="33" /><img src="{$static}/images/b_2.gif" width="98" height="33" /><img src="{$static}/images/b_3.gif" width="98" height="33" /><img src="{$static}/images/b_4.gif" width="98" height="33" /><img src="{$static}/images/b_5.gif" width="98" height="33" /><img src="{$static}/images/b_6.gif" width="98" height="33" />
+    </div>      
+</div>
+<!--End Footer End -->    
+</body>
+<script type="text/javascript">
+/**
+ * 刷新验证码
+ * @return {[type]} [description]
+ */
+ function refreshcaptcha(){
+    var ts = Date.parse(new Date())/1000;
+    $('#captcha_img').attr( 'src', '{:captcha_src()}?id='+ts );
+}
+
+$('.s_sh').mouseover(function(){
+    $('.div_show_s').css('display', 'block');
+});
+$('.s_sh').mouseout(function(){
+    $('.div_show_s').css('display', 'none');
+})
+
+$(function(){
+    $('#regForm').validate({
+        rules: {
+            uName  : 'required',
+            uPwd   : {
+                required : true,
+                minlength: 5
+            },
+            rePwd   : {
+                required : true,
+                minlength: 5,
+                equalTo  : '#uPwd'
+            },
+            uEmail   : {
+                required : true,
+                email    : true
+            },
+            uPhone : 'required',
+            captcha: 'required',
+        },
+        messages: {
+            uName  : '请输入昵称',
+            uPwd   : {
+                required: '请输入密码',
+                minlength:'密码不得小于5位'
+            },
+            rePwd   : {
+                required : '请输入确认密码',
+                minlength: '密码不得小于5位',
+                equalTo  : '两次密码输入不一致'
+            },
+            uEmail : '请输入一个正确邮箱',
+            uPhone : '请输入一个手机号码',
+            captcha: '请输入验证码',
+        },
+        submitHandler: function(){
+            var bool = $('#check').prop('checked');
+
+            if(bool){
+                var obj = decodeURIComponent($('#regForm').serialize(), true);
+                // console.log(obj);return false;
+                $.ajax({
+                    type : 'post',
+                    data : obj,
+                    dataType: 'json',
+                    url  : '{:url("AuthMember/register")}',
+                    success:function(ret){
+                        if(ret.code == '1'){
+                            layer.msg(ret.msg,{time:2000},function(){
+                                window.location.href="{:url('AuthMember/login')}";
+                            });
+                        }else{
+                            layer.msg(ret.msg, {icon:2, time:2000},function(){
+                                refreshcaptcha();
+                            });
+                            return false;
+                        }
+                    }
+                });
+            }else{
+                layer.msg('请同意用户协议',{icon:2, time:2000});
+                return false;
+            }
+        }
+    });
+});
+</script>
+
+</html>

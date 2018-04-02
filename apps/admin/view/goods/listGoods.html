@@ -1,0 +1,140 @@
+{extend name="base/main"}
+{block name="body"}
+<style type="text/css">
+    a{
+        text-decoration: none!important;
+    }
+    .red{
+        color: red;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 商品管理 
+    <span class="c-gray en">&gt;</span> 商品列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+    <!-- <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+            </a>
+            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            </a>
+        </span>
+    </div> -->
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+            <tr>
+                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong>{$count}</strong> 条</span></th>
+
+            </tr>
+            <tr class="text-c">
+                <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+                <th width="40">ID</th>
+                <th width="150">商品名称</th>
+                <th width="90">商品类型</th>
+                <th width="90">商品单位</th>
+                <th width="150">商品价格</th>
+                <th width="130">商品图片</th>
+                <<!-- th width="100">是否已启用</th> -->
+                <th width="100">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {if condition="(empty($list))"}
+            <tr class="text-c">
+            	<td colspan="8" style="text-align: center">暂无数据</td>
+        	</tr>
+            {else /}
+	            {php}$count = 1;{/php}
+	            {volist name="list" id="vo"}
+	            <tr class="text-c">
+	                <!-- <td><input type="checkbox" value="1" name=""></td> -->
+	                <td>{php}echo $count;{/php}</td>
+	                <td></td>
+	                <td></td>
+	                <td></td>
+	                <td></td>
+	                <td></td>
+	                <!-- <td></td> -->
+	                <td class="td-manage">
+	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe631;</i>停用</a>
+	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe601;</i>启用</a>
+	                    <a href="" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
+	                </td>
+	            </tr>
+	            {php}$count++;{/php}
+	            {/volist}
+	        {/if}
+        </tbody>
+    </table>
+    {if condition="(empty($list))"}
+    	{else /}
+    {$list->render()}
+    {/if}
+</div>
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
+<script>
+    function stopOrStartMenu(ids, status){
+        $.ajax({
+            type: 'post',
+            data: {ids: ids, status: status},
+            dataType: 'json',
+            url: '{:url("Menu/stopOrStartMenu")}',
+            success: function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000);
+                    // location.reload();
+                }else{
+                    layer.msg(ret.msg);
+                    return false;
+                }
+            },
+            error: function(XmlHttpRequest, textStatus, errorThrown){
+                layer.msg('系统错误！',{icon:5,time:2000});
+            }
+        });
+    }
+    function menuDel(ids, pids){
+        layer.confirm('确定要删除吗？', {
+            icon: 7,
+            title: '警告',
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type: 'post',
+                data: {ids: ids, pids:pids},
+                dataType: 'json',
+                url: '{:url("Menu/menuDel")}',
+                success: function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg);
+                        setTimeout(function(){
+                            location.reload();
+                        },1000);
+                        // location.reload();
+                    }else{
+                        layer.msg(ret.msg);
+                        return false;
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    layer.msg('系统错误，请稍候再试！',{icon:5,time:2000});
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+        
+    }
+</script>
+
+{/block}

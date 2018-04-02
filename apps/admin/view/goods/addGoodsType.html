@@ -1,0 +1,112 @@
+{extend name="base/main"}
+{block name="body"}
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i>商品管理
+    <span class="c-gray en">&gt;</span>添加种类
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<article class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form">
+        <div class="row cl">
+            <label class="form-label col-xs-2 col-sm-1"><span class="c-red">*</span>种类名称</label>
+            <div class="formControls col-xs-3 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="typeName" name="typeName">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-2 col-sm-1"><span class="c-red">*</span>种类排序</label>
+            <div class="formControls col-xs-3 col-sm-3">
+                <input type="text" class="input-text" placeholder="0" name="typeSort" id="typeSort">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-2 col-sm-1 text-center"><span class="c-red">*</span>上级种类</label>
+            <div class="formControls col-xs-3 col-sm-3"> 
+                <span class="select-box">
+                    <select class="select" name="typeUp" size="1" id="typeUp">
+                        <option value="" selected="">无</option>
+                        {volist name="allType" id="type"}
+                            <option value="{$type.id}">{$type.title_show}</option>
+                        {/volist}
+                    </select>
+                </span> 
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-offset-2 col-sm-offset-2">
+                <input id="sub" class="btn btn-primary radius" type="submit" value="提交">
+                <input class="btn btn-default radius" type="reset" value="重置">
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="{$static}/h_ui/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="{$static}/h_ui/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="{$static}/h_ui/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="{$static}/h_ui/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="{$static}/js/formToJson.js"></script>
+<script type="text/javascript">
+$(function(){
+    // form验证
+    $("#form").validate({
+        rules:{
+            typeName:{
+                required:true,
+                minlength:2,
+                maxlength:16
+            }
+        },
+        onkeyup:false,
+        focusCleanup:true,
+        success:"valid",
+        submitHandler:function(form){
+            var data = decodeURIComponent($(form).serialize(), true);
+            data = DataDeal.formToJson(data);
+            var obj = JSON.parse(data);
+            $(form).ajaxSubmit({
+                type     : 'post',
+                data     : obj,
+                dataType : 'json',
+                url      : '{:url("Goods/addGoodsType")}',
+                success: function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg, {
+                            icon: 1,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        }); 
+                    }else{
+                        layer.msg(ret.msg, {
+                            icon: 2,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            return false;
+                        }); 
+                    }
+                },
+                error: function(XmlHttpRequest, textStatus, errorThrown){
+                    layer.msg('系统错误！',{icon:5,time:2000});
+                }
+            });
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.$('.btn-refresh').click();
+            parent.layer.close(index);
+        }
+    });
+});
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+
+{/block}
+
