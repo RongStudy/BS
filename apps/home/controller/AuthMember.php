@@ -30,22 +30,26 @@ class AuthMember extends controller{
             if(!captcha_check(input('captcha'))){
                 $this->error('验证码不正确');
             }else{
-                // $res = action('Login/checkLogin', input());
                 $map = [];
-                $map['username']  = input('uName');
-                $map['user_type'] = '3';
                 $field = '*';
+                $map['user_type'] = '3';
+                $map['username']  = input('uName');
+
                 $list = model('AuthMember')->findUser($map, $field);
                 if($list){
                     if($list['status'] == 2){
                         $this->error('此用户被禁用');
                     }else if($list['is_remove'] == 2){
                         $this->error('此用户被系统强制删除');
-                    }else if($list['is_black']){
+                    }else if($list['is_black'] == 2){
                         $this->error('此用户被列入了黑名单');
                     }else{
                         if($list['password'] == cthink_md5(input('uPwd'))){
-                            
+                            if(model('AuthMember')->updateLoginInfo($list)){
+                                $this->success('登录成功');
+                            }else{
+                                $this->error('登录失败，请稍候重试');
+                            }
                         }else{
                             $this->error('密码不正确');
                         }
@@ -58,7 +62,7 @@ class AuthMember extends controller{
             return $this->fetch();
         }
     }
-
+    
     /**
      * 注册
      */
@@ -89,13 +93,9 @@ class AuthMember extends controller{
      * 退出登录
      */
     public function logout(){
-        // 删除登录的token记录
-        $where = [];
-        $where['uid']   = $this->uid;
-        $where['token'] = $this->auth_user['token'];
-        db('member_token')->where($where)->delete();
-        // 删除session
-        Session::clear('home');
+        Session::clear( 'home' );
+        Session::delete( 'home' );
+        $this->redirect(url('Index/index'));
     }
 }
 

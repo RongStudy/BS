@@ -152,18 +152,16 @@ $(function(){
                 dataType: 'json',
                 url  : '{:url("AuthMember/login")}',
                 success:function(ret){
-                    console.log(ret);
-                    return false;
-                    // if(ret.code == '1'){
-                    //     layer.msg(ret.msg,{time:2000},function(){
-                    //         window.location.href="{:url('AuthMember/login')}";
-                    //     });
-                    // }else{
-                    //     layer.msg(ret.msg, {icon:2, time:2000},function(){
-                    //         refreshcaptcha();
-                    //     });
-                    //     return false;
-                    // }
+                    if(ret.code == '1'){
+                        layer.msg(ret.msg,{time:2000},function(){
+                            window.location.href="{:url('Index/index')}";
+                        });
+                    }else{
+                        layer.msg(ret.msg, {icon:2, time:2000},function(){
+                            refreshcaptcha();
+                        });
+                        return false;
+                    }
                 }
             });
         }
