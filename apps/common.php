@@ -79,3 +79,22 @@ function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 
     }
     return $tree;
 }
+
+/**
+ * 图片路径
+ * $type == 1：获取缩略图
+ * $type != 1：获取原图
+ */
+function photoPath($data, $type = 1){
+    $imgPath = [];
+    if($type == 1){
+        foreach ($data as $key => $value) {
+            $imgPath[] = config('url_domain').'/public/uploads/'.$value['thumb_path'].'/'.$value['thumb_name'];
+        }
+    }else{
+        foreach ($data as $key => $value) {
+            $imgPath[] = config('url_domain').'/public/uploads/'.$value['save_path'].'/'.$value['name'];
+        }
+    }
+    return $imgPath;
+}
