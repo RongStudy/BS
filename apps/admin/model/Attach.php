@@ -16,6 +16,10 @@ class Attach extends Model{
     public function addPhoto($map){
         return \think\Db::table($this->table)->insertGetId($map);
     }
+
+    public function getPhoto($map){
+        return \think\Db::table($this->table)->where($map)->select();
+    }
 }
 
 
