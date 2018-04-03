@@ -17,20 +17,33 @@
     </a>
 </nav>
 <div class="page-container">
-    <!-- <div class="cl pd-5 bg-1 bk-gray">
+    <div class="text-c search" style="display: none;">
+        <form class="Huiform">
+            <input type="text" class="input-text" style="width:250px" placeholder="商品名称" id="" name="gName">
+            <button class="btn btn-success" id="subSearch" name=""><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+        </form>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+            <a href="javascript:;" onclick="ser()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe709;</i> 搜索
             </a>
-            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            <!-- <a href="{:url('Goods/addGoods')}" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 添加商品
+            </a> -->
+            <a href="{:url('Goods/listGoods')}" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe667;</i> 显示全部
             </a>
         </span>
-    </div> -->
+        <span class="r">
+            123
+        </span>
+    </div>
+
     <table class="table table-border table-bordered table-bg">
         <thead>
             <tr>
-                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong>{$count}</strong> 条</span></th>
+                <th scope="col" colspan="9">商品列表<span class="r">共有数据：<strong>{$count}</strong> 条</span></th>
 
             </tr>
             <tr class="text-c">
@@ -40,8 +53,8 @@
                 <th width="90">商品类型</th>
                 <th width="90">商品单位</th>
                 <th width="150">商品价格</th>
-                <th width="130">商品图片</th>
-                <<!-- th width="100">是否已启用</th> -->
+                <!-- <th width="130">商品图片</th> -->
+                <!-- th width="100">是否已启用</th> -->
                 <th width="100">操作</th>
             </tr>
         </thead>
@@ -56,12 +69,18 @@
 	            <tr class="text-c">
 	                <!-- <td><input type="checkbox" value="1" name=""></td> -->
 	                <td>{php}echo $count;{/php}</td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <!-- <td></td> -->
+	                <td><a href="{:url('Goods/goodsDetail', ['gids'=>$vo['gid']])}" class="detail"  title="查看详情">{$vo.gTitle}</a></td>
+	                <td>
+                        {foreach name="gType" item="type"}
+                        {php}
+                            if($type['id'] == $vo['gType']){
+                                echo $type['title'];
+                            }
+                        {/php}
+                        {/foreach}
+                    </td>
+                    <td>{$vo.gUnit}</td>
+	                <td>{$vo.gPrice}</td>
 	                <td class="td-manage">
 	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe631;</i>停用</a>
 	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe601;</i>启用</a>
@@ -80,12 +99,40 @@
 </div>
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
 <script>
-    function stopOrStartMenu(ids, status){
+function stopOrStartMenu(ids, status){
+    $.ajax({
+        type: 'post',
+        data: {ids: ids, status: status},
+        dataType: 'json',
+        url: '{:url("Menu/stopOrStartMenu")}',
+        success: function(ret){
+            if(ret.code == 1){
+                layer.msg(ret.msg);
+                setTimeout(function(){
+                    location.reload();
+                },1000);
+                // location.reload();
+            }else{
+                layer.msg(ret.msg);
+                return false;
+            }
+        },
+        error: function(XmlHttpRequest, textStatus, errorThrown){
+            layer.msg('系统错误！',{icon:5,time:2000});
+        }
+    });
+}
+function menuDel(ids, pids){
+    layer.confirm('确定要删除吗？', {
+        icon: 7,
+        title: '警告',
+        btn: ['确定','取消'] //按钮
+    }, function(){
         $.ajax({
             type: 'post',
-            data: {ids: ids, status: status},
+            data: {ids: ids, pids:pids},
             dataType: 'json',
-            url: '{:url("Menu/stopOrStartMenu")}',
+            url: '{:url("Menu/menuDel")}',
             success: function(ret){
                 if(ret.code == 1){
                     layer.msg(ret.msg);
@@ -99,42 +146,33 @@
                 }
             },
             error: function(XmlHttpRequest, textStatus, errorThrown){
-                layer.msg('系统错误！',{icon:5,time:2000});
+                layer.msg('系统错误，请稍候再试！',{icon:5,time:2000});
             }
         });
+    }, function(){
+        layer.close();
+    });
+}
+var bool = false;
+function ser(){
+    if(!bool){
+        $('.search').css('display','block');
+        bool = true;
+    }else{
+        $('.search').css('display','none');
+        bool = false;;
     }
-    function menuDel(ids, pids){
-        layer.confirm('确定要删除吗？', {
-            icon: 7,
-            title: '警告',
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            $.ajax({
-                type: 'post',
-                data: {ids: ids, pids:pids},
-                dataType: 'json',
-                url: '{:url("Menu/menuDel")}',
-                success: function(ret){
-                    if(ret.code == 1){
-                        layer.msg(ret.msg);
-                        setTimeout(function(){
-                            location.reload();
-                        },1000);
-                        // location.reload();
-                    }else{
-                        layer.msg(ret.msg);
-                        return false;
-                    }
-                },
-                error: function(XmlHttpRequest, textStatus, errorThrown){
-                    layer.msg('系统错误，请稍候再试！',{icon:5,time:2000});
-                }
-            });
-        }, function(){
-            layer.close();
-        });
-        
-    }
+    $('input[name="gName"]').val('');
+}
+$('#subSearch').click(function(){
+    var serContent = $('input[name="gName"]').val();
+    $.ajax({
+        type: 'post',
+        data: {'gName': serContent},
+        dataType: 'json',
+        url:  '{:url("Goods/listGoods")}'
+    });
+});
 </script>
 
 {/block}

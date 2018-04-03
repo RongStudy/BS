@@ -1,0 +1,133 @@
+{extend name="base/main"}
+{block name="body"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/layui/css/layui.css">
+<script type="text/javascript" src="__PUBLIC__/plugins/layui/layui.js"></script>
+<!-- <script type="text/javascript" src="__PUBLIC__/plugins/layer/layer.js"></script> -->
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i>商品管理
+    <span class="c-gray en">&gt;</span>商品详情
+    <!-- <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a> -->
+</nav>
+<div class="page-container">
+	<table class="layui-table" style="">
+		<tr>
+			<td style="width: 150px">商品名称</td>
+			<td style="">{$list.gTitle}</td>
+		</tr>
+		<tr>
+			<td>商品短标题</td>
+			<td>{$list.gShortTitle}</td>
+		</tr>
+		<tr>
+			<td>商品类别</td>
+			<td>
+				{foreach name="gType" item="type"}
+	            {php}
+	                if($type['id'] == $list['gType']){
+	                    echo $type['title'];
+	                }
+	            {/php}
+	            {/foreach}
+			</td>
+		</tr>
+		<tr>
+			<td>商品排序</td>
+			<td>{$list.gSort}</td>
+		</tr>
+		{if condition="(!empty($list.gFormat))"}
+		<tr>
+			<td>商品规格</td>
+			<td>{$list.gFormat}</td>
+		</tr>
+		{/if}
+		{if condition="(!empty($list.gArea))"}
+		<tr>
+			<td>商品产地</td>
+			<td>{$list.gArea}</td>
+		</tr>
+		{/if}
+		{if condition="(!empty($list.gProduct))"}
+		<tr>
+			<td>商品供应商</td>
+			<td>{$list.gProduct}</td>
+		</tr>
+		{/if}
+		{if condition="(!empty($list.gUnit))"}
+		<tr>
+			<td>商品单位</td>
+			<td>{$list.gUnit}</td>
+		</tr>
+		{/if}
+		{if condition="(!empty($list.gWeight))"}
+		<tr>
+			<td>商品重量</td>
+			<td>{$list.gWeight}&nbsp;kg</td>
+		</tr>
+		{/if}
+		<tr>
+			<td>商品价格</td>
+			<td>{$list.gPrice}&nbsp;元</td>
+		</tr>
+		{if condition="(!empty($list.gExplain))"}
+		<tr>
+			<td>商品描述</td>
+			<td>{$list.gExplain}</td>
+		</tr>
+		{/if}
+		<tr>
+			<td>添加时间</td>
+			<td>{$list.addTime|date="Y-m-d H:i:s",###}</td>
+		</tr>
+		<tr>
+			<td>商品图片</td>
+			<td>
+				
+					{if condition="(!empty($list.gImg))"}
+					{php}
+					echo '<div id="layer-photo" class="layer-photo">';
+					foreach($imgThumb as $k=>$v){
+						echo '<img class="" src="'.$v.'" layer-src="'.$imgClarity[$k].'">';
+					}
+					echo '</div>';
+					{/php}
+					{else/}无图片
+					{/if}
+				
+		</td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+	// $('.goodsImg').click(function(){
+	// 	var clarity = $(this).attr('attr_clarity');
+	// 	var json = {
+	// 		"title": "图片详情",
+	// 		"id"   : "",
+	// 		start
+	// 	}
+	// 	layui.use('layer', function(){
+	// 		var layer = layui.layer;
+	// 		// layer.open({
+	// 		//     type: 1,
+	// 		//     title: '图片详情',
+	// 		//     shadeClose: true,
+	// 		//     // area: [100%, 100%],
+	// 		//     content: '<img src="'+clarity+'" style="">'
+	// 		// });
+	// 		layer.photos({
+	// 			photos: clarity,
+	// 			anim: 5
+	// 		})
+	// 	});
+	// });
+	layui.use('layer', function(){
+		var layer = layui.layer;
+		layer.photos({
+			photos: '#layer-photo',
+			anim: 5
+		})
+	});
+</script>
+{/block}

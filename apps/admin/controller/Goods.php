@@ -80,11 +80,51 @@ class Goods extends Base{
      * 商品列表
      */
     public function listGoods(){
-        $list  = model('Goods')->getAll();
+        // 获取商品
+        $field = 'gid,gTitle,gType,gUnit,gPrice';
+        $map = [];
+        $title = input('gName');
+        if($title){
+            $map['gTitle'] = !empty($title)?array('like', '%'.$title.'%'):'';
+        }
+        $list  = model('Goods')->getAll(10, $field, $map);
+        // echo model('Goods')->getLastSql();die;
+        // 获取商品类型
+        $gType = model('GoodsType')->getType($map = [], 'id,title');
+
         $count = count($list);
         $this->assign('count', $count);
         $this->assign('list', $list);
+        $this->assign('gType', $gType);
+        // print_r($list);die;
         return $this->fetch();
+    }
+
+    /**
+     * 商品详情
+     */
+    public function goodsDetail(){
+        $gid = input('gids');
+        if($gid){
+            // 获取商品
+            $list  = model('Goods')->getOne(array('gid'=>$gid));
+            // 获取商品类型
+            $gType = model('GoodsType')->getType($map = [], 'id,title');
+
+            // 图片
+            $map['id'] = array('in', explode(',', $list['gImg']));
+            $res = model('Attach')->getPhoto($map);
+            $imgThumb = photoPath($res, 1);     // 缩略图
+            // dump($imgThumb);die;
+            $imgClarity = photoPath($res, 2);   // 原图
+            $this->assign('list', $list);
+            $this->assign('gType', $gType);
+            $this->assign('imgThumb', $imgThumb);
+            $this->assign('imgClarity', $imgClarity);
+            return $this->fetch();
+        }else{
+            $this->error('非法请求，请稍候重试');
+        }
     }
 }
 

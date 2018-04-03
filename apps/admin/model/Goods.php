@@ -19,11 +19,17 @@ class Goods extends Model{
     /**
      * 获取所有商品
      */
-    public function getAll($page = '10'){
-        $data = \think\Db::table($this->table)->paginate($page);
+    public function getAll($page = '10', $field='*', $map){
+        $data = \think\Db::table($this->table)->field($field)->where($map)->paginate($page);
         return $data;
     }
 
+    /**
+     * 获取商品详情
+     */
+    public function getOne($map){
+        return \think\Db::table($this->table)->find($map);
+    }
     
 }
 
