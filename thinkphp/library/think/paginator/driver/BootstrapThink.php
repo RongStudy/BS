@@ -130,7 +130,7 @@ class BootstrapThink extends Paginator
                 }
                 /************跳转页面************/
                 return sprintf(
-                    '<div id="page" class="page_div pagination">%s %s %s<span class=\'totalSize\'> 跳转<input class=\'jump_class jump_page_num\' onkeyup="this.value=this.value.replace(/\D/, \'\');" type=\'text\' value=\'\'>页 </span><a href=\'javascript:void(0);\' onclick=\'jumpPage(this);\' data-href="'.$base_url.'" class=\'jump_btn\' style=\'color: #18a689;border: 1px solid #18a689!important;margin-left:0px;\'>确定</a><span class="totalPages"> 共<span>'.$this->lastPage.'</span>页 </span><span class="totalSize"> 共<span>'.$this->total.'</span>条记录 </span></div>',
+                    '<div id="page" class="page_div pagination">%s %s %s<span class=\'totalSize\'> <span class="totalPages"> 共<span>'.$this->lastPage.'</span>页 </span><span class="totalSize"> 共<span>'.$this->total.'</span>条记录 </span></div>',
                     $this->getPreviousButton(),
                     $this->getLinks(),
                     $this->getNextButton()
