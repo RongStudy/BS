@@ -99,6 +99,10 @@
 </div>
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
 <script>
+
+/**
+ * 停用启用商品
+ */
 function stopOrStartMenu(ids, status){
     $.ajax({
         type: 'post',
@@ -122,6 +126,10 @@ function stopOrStartMenu(ids, status){
         }
     });
 }
+
+/**
+ * 删除商品
+ */
 function menuDel(ids, pids){
     layer.confirm('确定要删除吗？', {
         icon: 7,
@@ -153,6 +161,10 @@ function menuDel(ids, pids){
         layer.close();
     });
 }
+
+/**
+ * 商品搜索
+ */
 var bool = false;
 function ser(){
     if(!bool){
@@ -164,6 +176,7 @@ function ser(){
     }
     $('input[name="gName"]').val('');
 }
+
 $('#subSearch').click(function(){
     var serContent = $('input[name="gName"]').val();
     $.ajax({
