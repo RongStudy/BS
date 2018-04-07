@@ -62,6 +62,18 @@ class AuthMember extends Model{
                 -> find();
         return $data;
     }
+
+    /**
+     * 搜索用户
+     */
+    public function selectMap($minDate, $maxDate, $map){
+        if($minDate == '' && $maxDate=='' && !$map){
+            return \think\Db::table($this->table)->select();
+        }
+        // }else{
+        //     return \think\Db::table($this->table)->where('ctime', 'between', '$minDate,$maxDate')->select(); 
+        // }
+    }
 }
 
 
