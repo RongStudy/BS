@@ -8,6 +8,7 @@
         color: red;
     }
 </style>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/layui/css/layui.css">
 <link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 菜单管理 
@@ -42,7 +43,7 @@
                 <th width="150">Url</th>
                 <th width="130">是否已隐藏</th>
                 <th width="100">是否已启用</th>
-                <th width="100">操作</th>
+                <th width="150">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -52,6 +53,7 @@
                 <!-- <td><input type="checkbox" value="1" name=""></td> -->
                 <td>{php}echo $count;{/php}</td>
                 <td>
+                {php}$pid = $vo['pid'];{/php}
                 {if condition="($vo.pid == 0)"}
                     <a href="{:url('Menu/menuList', ['pid'=>$vo['id'], 'title'=>$vo['title']])}" title="查看下级分类" class="red">{$vo.title}</a>
                     {else /}
@@ -99,6 +101,13 @@
         </tbody>
     </table>
     {$list->render()}
+
+    {if condition="$pid neq 0"}
+    <div class="text-c" style="margin-top:20px;">
+        <span class="layui-btn layui-btn-sm" onclick="javascript:history.back()">返回</span>
+    </div>
+    {/if}
+
 </div>
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
 <script>
