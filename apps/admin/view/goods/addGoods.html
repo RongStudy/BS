@@ -27,13 +27,13 @@
                 <span class="c-red">*</span>产品标题：
             </label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" class="input-text" value="" placeholder="" id="gTitle" name="gTitle">
+                <input type="text" class="input-text" value="{$goods.gTitle}" placeholder="" id="gTitle" name="gTitle">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">简略标题：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" class="input-text" value="" placeholder="" id="gShortTitle" name="gShortTitle">
+                <input type="text" class="input-text" value="{$goods.gShortTitle}" placeholder="" id="gShortTitle" name="gShortTitle">
             </div>
         </div>
         <div class="row cl">
@@ -52,62 +52,95 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品排序：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
+                {if condition="(!empty($goods.gSort))"}
+                <input type="text" class="input-text" value="{$goods.gSort}" placeholder="" id="gSort" name="gSort">
+                {else /}
                 <input type="text" class="input-text" value="0" placeholder="" id="gSort" name="gSort">
+                {/if}
+                
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品产地：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gArea" id="gArea" placeholder="" value="" class="input-text">
+                <input type="text" name="gArea" id="gArea" placeholder="" value="{$goods.gArea}" class="input-text">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品库存</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gInvertory" id="gInvertory" placeholder="" value="" class="input-text">
+                <input type="text" name="gInvertory" id="gInvertory" placeholder="" value="{$goods.gInvertory}" class="input-text">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">供应商：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gProduct" id="gProduct" placeholder="" value="" class="input-text">
+                <input type="text" name="gProduct" id="gProduct" placeholder="" value="{$goods.gProduct}" class="input-text">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品单位：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gUnit" id="gUnit" placeholder="价格计算单位" value="" class="input-text" style="">
+                <input type="text" name="gUnit" id="gUnit" placeholder="价格计算单位" value="{$goods.gUnit}" class="input-text" style="">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品价格(元)：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gPrice" id="gPrice" placeholder="" value="" class="input-text" style="">
+                <input type="text" name="gPrice" id="gPrice" placeholder="" value="{$goods.gPrice}" class="input-text" style="">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品规格(mm)：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <input type="text" name="gFormat" id="gFormat" placeholder="商品的规格，请认真填写" value="" class="input-text">
+                <input type="text" name="gFormat" id="gFormat" placeholder="商品的规格，请认真填写" value="{$goods.gFormat}" class="input-text">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">产品摘要：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                <textarea name="gExplain" id="gExplain" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！"></textarea>
+                <textarea name="gExplain" id="gExplain" value="{$goods.gExplain}" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！"></textarea>
                 <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
             </div>
         </div>
+        {if condition="(!empty($goods.gImg))"}
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">当前图片：</label>
+            <div class="col-xs-6 col-sm-5 col-md-3">
+                {if condition="(!empty($goodsImages))"}
+                {php}
+                echo '<div id="layer-photo" class="layer-photo">';
+                foreach($goodsImages as $k=>$v){
+                    echo '<img class="" src="'.$v.'" layer-src="'.$goodsImagesClarity[$k].'">';
+                }
+                echo '</div>';
+                {/php}
+                {else/}无图片
+                {/if}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">修改图片：</label>
+            <div class="formControls col-xs-4 col-sm-5 col-md-3">
+                <a id="zwb_upload">
+                    <input type="file" class="add" multiple>点击上传新的商品图片
+
+                </a>
+                <input type="hidden" value="{$img}" name="gImg" id="gImg">
+            </div>
+        </div>
+        {else /}
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">上传图片：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
                 <a id="zwb_upload">
                     <input type="file" class="add" multiple>点击上传商品图片
-
                 </a>
                 <input type="hidden" name="gImg" id="gImg">
             </div>
         </div>
+        {/if}
+        
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
                 <input class="btn btn-secondary radius" type="submit" value="保存">
@@ -119,6 +152,7 @@
 
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugins/layui/layui.js"></script>
 <script type="text/javascript" src="{$static}/h_ui/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="{$static}/h_ui/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
@@ -188,6 +222,32 @@ $(function(){
     });
 });
 
+$('input[type="file"]').click(function(){
+    var gImg =  $('#gImg').val();
+    if(gImg){
+        $.ajax({
+            type: 'post',
+            data: {'gImg': gImg},
+            dataType: 'json',
+            url:  '{:url("Attach/delTrush")}',
+        });
+    }
+    $('#gImg').val('');
+});
+
+/**
+ * layui图片插件
+ * @param  {[type]} ){                 var layer [description]
+ * @return {[type]}     [description]
+ */
+layui.use('layer', function(){
+    var layer = layui.layer;
+    layer.photos({
+        photos: '#layer-photo',
+        anim: 5
+    })
+});
+
 /**
  * 验证值是否是数字并且与0比较
  * @param  {[type]}  1  [大于等于0] 2 [大于0]
@@ -209,7 +269,6 @@ function isNum(val, type = 1){
         }
     }
 }
-
 /**
  * 图片上传
  * [url description]
@@ -225,6 +284,8 @@ $("#zwb_upload").bindUpload({
     type:"jpg|png|gif|svg",//上传文件类型 默认为空 无限制
     size:3,//上传文件大小的限制,默认为5单位默认为mb
 });
+
+
 </script>
 
 {/block}

@@ -35,10 +35,8 @@ class Attach extends Base{
     			if($ret){
     				$state = 1;
     				$msg  = $ret; // 数据库自增ID
-    				// echo json_encode(array('state'=>1, 'path'=>'./demo'));
-    				// return json(array('code'=>1,',msg'=>'测试'));
+                    sleep(0.5); // 延迟0.5秒，解决id返回错误
     				return json(array('state'=>$state, 'path'=>$msg));
-    				// return (json_encode(array('state'=>1, 'path'=>'./demo')));
     			}else{
     				$state = 0;
     				$errmsg   = '添加失败';
@@ -49,6 +47,43 @@ class Attach extends Base{
     			return (json_encode(array('state'=>0, 'errmsg'=>'系统出错')));
     		}
     	}
+    }
+
+    /**
+     * 删除垃圾图片
+     */
+    public function delTrush(){
+        $gImg = input('gImg');
+        $map['id'] = array('in', $gImg);
+        // $map['id'] = array('in', '81');
+        $list = model('Attach')->getPhoto($map);
+        $imgThumbPath   = photoPath($list, 1);
+        $imgClarityPath = photoPath($list, 2);
+
+        /**
+         * 删除缩略图
+         * @var [type]
+         */
+        foreach ($imgThumbPath as $key => $value) {
+            $filename = '.'.substr($value, strlen(config('URL_DOMAIN')));
+            if(file_exists($filename)){
+                if(unlink($filename)){
+                    echo '已删除缩略图';
+                }
+            }
+        }
+
+        /**
+         * 删除原图
+         */
+        foreach ($imgClarityPath as $key => $value) {
+            $filename = '.'.substr($value, strlen(config('URL_DOMAIN')));
+            if(file_exists($filename)){
+                if(unlink($filename)){
+                    echo '已删除大图';
+                }
+            }
+        }
     }
 }
 

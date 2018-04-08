@@ -17,6 +17,11 @@ class Attach extends Model{
         return \think\Db::table($this->table)->insertGetId($map);
     }
 
+    /**
+     * 获取指定图片
+     * @param  [type] $map [description]
+     * @return [type]      [description]
+     */
     public function getPhoto($map){
         return \think\Db::table($this->table)->where($map)->select();
     }

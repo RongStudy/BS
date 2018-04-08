@@ -126,6 +126,27 @@ class Goods extends Base{
             $this->error('非法请求，请稍候重试');
         }
     }
+
+    /**
+     * 编辑商品
+     */
+    public function goodEdit(){
+        $gid = input('gid');
+        if(request()->isPost()){}else{
+            $goods = model('Goods')->getOne(array('gid'=>$gid));
+            $goodsType = model('GoodsType')->getType([], 'id, title');
+            $map['id'] = array('in', $goods['gImg']);
+            $img = model('Attach')->getPhoto($map);
+            $goodsImages = photoPath($img, 1);          // 获取缩略图
+            $goodsImagesClarity = photoPath($img, 2);   // 获取大图
+            $this->assign('img', $img);
+            $this->assign('goods', $goods);
+            $this->assign('data', $goodsType);
+            $this->assign('goodsImages', $goodsImages);
+            $this->assign('goodsImagesClarity', $goodsImagesClarity);
+            return $this->fetch('addGoods');
+        }
+    }
 }
 
  ?>
