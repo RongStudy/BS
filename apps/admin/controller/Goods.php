@@ -139,7 +139,7 @@ class Goods extends Base{
             $img = model('Attach')->getPhoto($map);
             $goodsImages = photoPath($img, 1);          // 获取缩略图
             $goodsImagesClarity = photoPath($img, 2);   // 获取大图
-            $this->assign('img', $img);
+            $this->assign('img', $goods['gImg']);
             $this->assign('goods', $goods);
             $this->assign('data', $goodsType);
             $this->assign('goodsImages', $goodsImages);
