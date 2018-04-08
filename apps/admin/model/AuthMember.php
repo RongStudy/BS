@@ -69,6 +69,15 @@ class AuthMember extends Model{
     public function searchMember($map){
         return \think\Db::table($this->table)->where($map)->paginate(10);
     }
+
+    /**
+     * 用户启用禁用、删除
+     * @param [type] $map [description]
+     * @param [type] $id  [description]
+     */
+    public function setStatus($map, $id){
+        return \think\Db::table($this->table)->where(array('uid'=>$id))->update($map);
+    }
 }
 
 
