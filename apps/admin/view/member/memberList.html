@@ -1,21 +1,16 @@
 {extend name="base/main" /}
 {block name="body"}
 <link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
-<script type="text/javascript" src="__PUBLIC__/plugins/laydate/laydate.js"></script>
 
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 
-    首页 <span class="c-gray en">&gt;</span>用户中心<span class="c-gray en">&gt;</span> 
-    用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+    用户管理 <span class="c-gray en">&gt;</span>用户列表<!-- <span class="c-gray en">&gt;</span> --> 
+     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
         <i class="Hui-iconfont">&#xe68f;</i>
     </a>
 </nav>
 <div class="page-container">
-    <div class="text-c"> 日期范围：
-        <!--<form class="Huiform">-->
-            <!--<input type="text" class="input-text" style="width:250px" placeholder="商品名称" id="" name="userPhone">-->
-            <!--<button class="btn btn-success" id="subSearch" name=""><i class="Hui-iconfont">&#xe665;</i> 搜索</button>-->
-        <!--</form>-->
+    <div class="text-c">
         <form class="Huiform">
             <input type="text" onfocus="" id="" name="dateMin" class="input-text dateMin" style="width:120px;">
              -
@@ -36,7 +31,7 @@
                 管理员
             </a>
         </span> 
-        <span class="r">共有数据：<strong>88</strong> 条</span>
+        <span class="r">共有数据：<strong>{$count}</strong> 条</span>
     </div>
     <!-- <div class="mt-20"> -->
     <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -46,8 +41,8 @@
                 <th width="">ID</th>
                 <th width="">用户名</th>
                 <th width="">昵称</th>
-                <th width="">启用/禁用</th>
-                <th width="">是否删除</th>
+                <th width="">启用/禁用(当前)</th>
+                <th width="">是否删除(当前)</th>
                 <th width="">登陆次数</th>
                 <th width="">最后登录时间</th>
                 <th width="">注册时间</th>
@@ -64,10 +59,18 @@
                     <td>{$v.username}</td>
                     <td>{$v.nickname}</td>
                     <td>
-                        {if condition="($v.status eq 1)"}启用{else /}禁用{/if}
+                        {if condition="($v.status eq 1)"}
+                        <span class="label label-success radius" onclick="set(1, 2, {$v.uid}, {$v.user_type})">启用</span>
+                        {else /}
+                        <span class="label label-warning radius" onclick="set(1, 1, {$v.uid}, {$v.user_type})">禁用</span>
+                        {/if}
                     </td>
                     <td>
-                        {if condition="($v.is_remove eq 1)"}未删除{else /}已删除{/if}
+                        {if condition="($v.is_remove eq 1)"}
+                        <span class="label label-success radius" onclick="set(2, 2, {$v.uid}, {$v.user_type})">未删除</span>
+                        {else /}
+                        <span class="label label-warning radius" onclick="set(2, 1, {$v.uid}, {$v.user_type})">已删除</span>
+                        {/if}
                     </td>
                     <td>{$v.login_count}</td>
                     <td>{$v.last_login_time|date="Y-m-d H:i:s",###}</td>
@@ -101,21 +104,23 @@
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>
-
+<script type="text/javascript" src="__PUBLIC__/plugins/laydate/laydate.js"></script>
 
 <script type="text/javascript">
     /**
      * 初始化laydate
      * @type {String}
      */
-    laydate.render({ 
-        elem: '.datemin',
-        //,type: 'date' //默认，可不填
-    });
-    laydate.render({ 
-        elem: '.datemax',
-        //,type: 'date' //默认，可不填
-    });
+    $(function(){
+        laydate.render({ 
+            elem: '.dateMin',
+            type: 'datetime' //默认，可不填
+        });
+        laydate.render({ 
+            elem: '.dateMax',
+            type: 'datetime' //默认，可不填
+        });
+    })
 
     /**
      * 显示普通用户或者管理员
@@ -141,5 +146,36 @@
             url:  '{:url("Member/memberList")}'
         });
     });
+
+    /**
+     * 启用禁用 、 删除
+     * @param {[type]} method [1：启用禁用 2：删除]
+     * @param {[type]} type   [1：启用、恢复删除 2：禁用、删除]
+     * @param {[type]} ids    [用户id]
+     */
+    function set(method, type ,ids, user_type){
+        if(user_type == 1){
+            layer.msg('此用户为管理员，不可进行此操作', {time:2000, icon:2});
+            return false;
+        }else{
+            var url = '';
+            $.ajax({
+                type: 'post',
+                data: {'method':method, 'type':type, 'ids':ids},
+                dataType: 'json',
+                url:  '{:url("Member/setStatus")}',
+                success: function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg, {time:2000, icon:1}, function(){
+                            location.reload();
+                        })
+                    }else{
+                        layer.msg(ret.msg, {time:2000, icon:2});
+                        return false;
+                    }
+                }
+            })
+        }
+    }
 </script> 
 {/block}
