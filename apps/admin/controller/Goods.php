@@ -130,7 +130,7 @@ class Goods extends Base{
     /**
      * 编辑商品
      */
-    public function goodEdit(){
+    public function goodsEdit(){
         $gid = input('gid');
         if(request()->isPost()){}else{
             $goods = model('Goods')->getOne(array('gid'=>$gid));
