@@ -43,7 +43,11 @@
                     <select name="gType" id="gType" class="select">
                         <option value="0">请选择分类</option>
                         {volist name="data" id="type"}
-                            <option value="{$type.id}">{$type.title}</option>
+                            {if condition="($type['id'] eq $goods['gType'])"}
+                                <option value="{$type.id}" selected="">{$type.title}</option>
+                            {else /}
+                                <option value="{$type.id}">{$type.title}</option>
+                            {/if}
                         {/volist}
                     </select>
                 </span>
@@ -52,7 +56,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商品排序：</label>
             <div class="formControls col-xs-4 col-sm-5 col-md-2">
-                {if condition="(!empty($goods.gSort))"}
+                {if condition="(!empty($goods['gSort']))"}
                 <input type="text" class="input-text" value="{$goods.gSort}" placeholder="" id="gSort" name="gSort">
                 {else /}
                 <input type="text" class="input-text" value="0" placeholder="" id="gSort" name="gSort">
@@ -103,17 +107,17 @@
                 <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
             </div>
         </div>
-        {if condition="(!empty($goods.gImg))"}
+        {if condition="(!empty($goods['gImg']))"}
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">当前图片：</label>
             <div class="col-xs-6 col-sm-5 col-md-3">
                 {if condition="(!empty($goodsImages))"}
                 {php}
-                echo '<div id="layer-photo" class="layer-photo">';
-                foreach($goodsImages as $k=>$v){
-                    echo '<img class="" src="'.$v.'" layer-src="'.$goodsImagesClarity[$k].'">';
-                }
-                echo '</div>';
+                    echo '<div id="layer-photo" class="layer-photo">';
+                    foreach($goodsImages as $k=>$v){
+                        echo '<img class="" src="'.$v.'" layer-src="'.$goodsImagesClarity[$k].'">';
+                    }
+                    echo '</div>';
                 {/php}
                 {else/}无图片
                 {/if}
@@ -222,6 +226,7 @@ $(function(){
     });
 });
 
+// 删除文件夹下的图片
 $('input[type="file"]').click(function(){
     var gImg =  $('#gImg').val();
     if(gImg){
@@ -232,7 +237,7 @@ $('input[type="file"]').click(function(){
             url:  '{:url("Attach/delTrush")}',
         });
     }
-    $('#gImg').val('');
+    // $('#gImg').val('');
 });
 
 /**
