@@ -25,9 +25,9 @@ class Goods extends Base{
             }
             return json(array('code'=>$code, 'msg'=>$msg));
         }else{
-            $map = [];
+            $map = array();
             $field = 'id, title';
-            $goodsType = $model->getType($map, $field);
+            $goodsType = $model->getType($this->uid, $map, $field);
             $this->assign('data', $goodsType);
             return $this->fetch();
         }
@@ -39,19 +39,16 @@ class Goods extends Base{
     public function addGoodsType(){
         $model = model('GoodsType');
         if(request()->isPost()){
-            $map = [];
+            $map = array();
+            $map['uid']   = $this->uid;
             $map['pid']   = input('typeUp');
+            $map['sort']  = input('typeSort');
             $map['title'] = input('typeName');
-            $map['sort'] = input('typeSort');
             $map['addtime'] = time();
 
-            /**
-             * 验证是否重复
-             */
-            $obj = $model->getType(array('title'=>input('typeName')));
-            if($obj){
-                return json(array('code'=>0, 'msg'=>'已存在此种类'));
-            }
+            // 验证是否重复
+            $obj = $model->getType($this->uid, array('title'=>input('typeName')));
+            if($obj){ return json(array('code'=>0, 'msg'=>'已存在此种类')); }
             if($map){
                 $res = $model->save($map);
                 if($res){
@@ -82,15 +79,14 @@ class Goods extends Base{
     public function listGoods(){
         // 获取商品
         $field = 'gid,gTitle,gType,gUnit,gPrice';
-        $map = [];
+        $map = array();
         $title = input('gName');
         if($title){
             $map['gTitle'] = !empty($title)?array('like', '%'.$title.'%'):'';
         }
         $list  = model('Goods')->getAll(10, $field, $map);
-        // echo model('Goods')->getLastSql();die;
         // 获取商品类型
-        $gType = model('GoodsType')->getType($map = [], 'id,title');
+        $gType = model('GoodsType')->getType($this->uid, '', $map = array(), 'id,title');
 
         $count = count($list);
         $this->assign('count', $count);
@@ -109,7 +105,7 @@ class Goods extends Base{
             // 获取商品
             $list  = model('Goods')->getOne(array('gid'=>$gid));
             // 获取商品类型
-            $gType = model('GoodsType')->getType($map = [], 'id,title');
+            $gType = model('GoodsType')->getType($this->uid, '', $map = array(), 'id,title');
 
             // 图片
             $map['id'] = array('in', explode(',', $list['gImg']));
@@ -132,9 +128,11 @@ class Goods extends Base{
      */
     public function goodsEdit(){
         $gid = input('gid');
-        if(request()->isPost()){}else{
+        if(request()->isPost()){
+
+        }else{
             $goods = model('Goods')->getOne(array('gid'=>$gid));
-            $goodsType = model('GoodsType')->getType([], 'id, title');
+            $goodsType = model('GoodsType')->getType($this->uid, '', array(), 'id, title');
             $map['id'] = array('in', $goods['gImg']);
             $img = model('Attach')->getPhoto($map);
             $goodsImages = photoPath($img, 1);          // 获取缩略图
@@ -146,6 +144,20 @@ class Goods extends Base{
             $this->assign('goodsImagesClarity', $goodsImagesClarity);
             return $this->fetch('addGoods');
         }
+    }
+
+    /**
+     * 商品种类
+     * 
+     */
+    
+    // 1.商品种类列表
+    public function listGoodsType(){
+        $title = input('title');
+        $list = model('GoodsType')->getType($this->uid, 10);
+        $this->assign('list', $list);
+        $this->assign('count', count($list));
+        return $this->fetch();
     }
 }
 

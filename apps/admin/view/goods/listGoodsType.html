@@ -1,0 +1,117 @@
+{extend name="base/main" /}
+{block name="body"}
+<link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<script type="text/javascript" src="__PUBLIC__/plugins/layer/layer.js"></script>
+
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 
+    用户管理 <span class="c-gray en">&gt;</span>用户列表<!-- <span class="c-gray en">&gt;</span> --> 
+     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+    <div class="text-c">
+        <form class="Huiform">
+            <input type="text" class="input-text" style="width:250px" placeholder="输入种类名称" id="title" name="title">
+            <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜种类</button>
+        </form>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="{:url('Goods/listGoodsType')}" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe667;</i> 全部显示
+            </a> 
+            <a href="{:url('Goods/listGoodsType',['user_type'=>3])}" id="showUser" class="btn btn-primary radius">
+                已启用
+            </a>
+            <a href="{:url('Goods/listGoodsType',['user_type'=>1])}" class="btn btn-primary radius">
+                已禁用
+            </a>
+        </span> 
+        <span class="r">共有数据：<strong>{$count}</strong> 条</span>
+    </div>
+    <!-- <div class="mt-20"> -->
+    <table class="table table-border table-bordered table-hover table-bg table-sort">
+        <thead>
+            <tr class="text-c">
+                <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+                <th width="">种类名称</th>
+                <th width="">种类排序</th>
+                <th width="">上级种类</th>
+                <th width="">种类状态(当前)</th>
+                <th width="">添加时间</th>
+                <th width="">修改时间</th>
+                <th width="">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {if condition="(!empty($list))"}
+                {foreach name="list" item="v"}
+                <tr class="text-c">
+                    <td>{$v.title}</td>
+                    <td>{$v.sort}</td>
+                    <td>
+                        {php}
+                            if($v['pid']!='0'){
+                                foreach($list as $k=>$val){
+                                    if($val['id'] == $v['pid']){
+                                        echo $val['title'];
+                                        break;
+                                    }
+                                }
+                            }else{ echo '无'; }
+                        {/php}
+                    </td>
+                    <td>
+                        {eq name="v.status" value="1"}开启
+                        {else /}禁用
+                        {/eq}
+                    </td>
+                    <td>
+                        {$v.addtime|date="Y-m-d H:i:s",###}
+                    </td>
+                    <td>
+                        {eq name="v.edittime" value="0",###}
+                        {else /}
+                        {$v.edittime|date="Y-m-d H:i:s",###}
+                        {/eq}
+                    </td>
+                    <td>
+                        <a href=""><i class="Hui-iconfont">&#xe60c;</i>修改</a>
+                    </td>
+                    
+                    
+                </tr>
+                {/foreach}
+            {else /}
+                <tr class="text-c">
+                    <td colspan="11">没有此用户</td>
+                </tr>
+            {/if}
+            {if condition="(!empty($list))"}
+                {if condition="($count eq 0)"}
+                <tr class="text-c">
+                    <td colspan="11">没有此用户</td>
+                </tr>
+                {/if}
+            {/if}
+        </tbody>
+    </table>
+    {if condition="(empty($list))"}{else /}{$list->render()}{/if}
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>
+
+<script type="text/javascript">
+    $('#subSearch').click(function(){
+        var title = $('#title').val();
+        if(title == ''){
+            layer.msg('请输入搜索内容', {icon:2, time:1500}, function(){
+                $('#title').focus();
+            });
+            return false;
+        }
+    })
+</script> 
+{/block}

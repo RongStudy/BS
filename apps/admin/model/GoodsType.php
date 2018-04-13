@@ -16,11 +16,20 @@ class GoodsType extends Model{
     /**
      * 获取数据库记录
      */
-    public function getType($map = [], $field = '*'){
-        $list = \think\Db::table($this->table)
-                    ->where($map)
-                    ->field($field)
-                    ->select();
+    public function getType($uid, $page = '', $map = [], $field = true){
+        if($page){
+            $list = \think\Db::table($this->table)
+                ->where(array('uid'=>$uid))
+                ->where($map)
+                ->field($field)
+                ->paginate($page);
+        }else{
+            $list = \think\Db::table($this->table)
+                ->where(array('uid'=>$uid))
+                ->where($map)
+                ->field($field)
+                ->select();
+        }
         return $list;
     }
 
