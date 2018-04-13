@@ -78,6 +78,14 @@ class AuthMember extends Model{
     public function setStatus($map, $id){
         return \think\Db::table($this->table)->where(array('uid'=>$id))->update($map);
     }
+
+    /**
+     * 修改密码
+     */
+    public function editPassword($uid, $map){
+        $map['password'] = cthink_md5($map['password']);
+        return \think\Db::table($this->table)->where(array('uid'=>$uid))->update($map);
+    }
 }
 
 

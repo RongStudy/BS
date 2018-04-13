@@ -41,11 +41,23 @@ class Member extends Base{
             $info = ($type == 2) ? '删除用户' : '恢复用户';
         }
         $res = model('AuthMember')->setStatus($map, input('ids'));
-        if($res){
-            $this->success($info.'成功');
+        $res ? $this->success($info.'成功') : $this->error($info.'失败');
+    }
+
+    /**
+     * 修改密码
+     */
+    public function editPassword(){
+        $uid = input('uid');
+        $pwd = input('rePwd');
+        if(!$uid || !$pwd){
+            $this->error('参数错误');
+            exit();
         }else{
-            $this->error($info.'失败');
+            $map['password'] = $pwd;
         }
+        $res = model('AuthMember')->editPassword($uid, $map);
+        $res ? $this->success('修改成功') : $this->error('修改失败');
     }
 }
 

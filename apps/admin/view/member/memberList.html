@@ -1,6 +1,7 @@
 {extend name="base/main" /}
 {block name="body"}
 <link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<script type="text/javascript" src="__PUBLIC__/plugins/layer/layer.js"></script>
 
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 
@@ -49,6 +50,7 @@
                 <th width="">修改时间</th>
                 <th width="">黑名单用户</th>
                 <th width="">用户类型</th>
+                <th width="">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -91,12 +93,25 @@
                         {else /}普通用户
                         {/if}
                     </td>
+                    <td>
+                        {if condition="($v.user_type neq 1)"}
+                            <span onclick="editPwd({$v.username}, {$v.uid})"><i class="Hui-iconfont">&#xe605;</i>修改密码</span>
+                        {else /}
+                        {/if}
+                    </td>
                 </tr>
                 {/foreach}
-                {else /}
+            {else /}
                 <tr class="text-c">
                     <td colspan="11">没有此用户</td>
                 </tr>
+            {/if}
+            {if condition="(!empty($list))"}
+                {if condition="($count eq 0)"}
+                <tr class="text-c">
+                    <td colspan="11">没有此用户</td>
+                </tr>
+                {/if}
             {/if}
         </tbody>
     </table>
@@ -176,6 +191,24 @@
                 }
             })
         }
+    }
+    function editPwd(username, uid){
+        layer.prompt({
+            title: '修改 ' + username + ' 的密码',
+            shadeClose: true,
+        },function(value, index, elem){
+            var pwd = value;
+            $.ajax({
+                type: 'post',
+                data: {uid:uid, rePwd:pwd},
+                dataType: 'json',
+                url : '{:url("Member/editPassword")}',
+                success: function(ret){
+                    layer.msg(ret.msg);
+                }
+            })
+            layer.close(index);
+        });
     }
 </script> 
 {/block}
