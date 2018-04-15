@@ -34,6 +34,20 @@ class GoodsType extends Model{
     }
 
     /**
+     * 获取单条记录
+     */
+    public function getOneType($map){
+        return \think\Db::table($this->table)->where($map)->find();
+    }
+
+    /**
+     * 修改状态
+     */
+    public function editStatus($id, $map){
+        return \think\Db::table($this->table)->where(array('id'=>$id))->update($map);
+    }
+
+    /**
      * 将menu菜单以tree的形式展示出来
      */
     public function getMenuTree(){

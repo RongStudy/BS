@@ -2,7 +2,7 @@
 {block name="body"}
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i>商品管理
-    <span class="c-gray en">&gt;</span>添加种类
+    <span class="c-gray en">&gt;</span>{if condition="(!empty($list))"}修改{else /}添加{/if}种类
     <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
         <i class="Hui-iconfont">&#xe68f;</i>
     </a>
@@ -12,13 +12,23 @@
         <div class="row cl">
             <label class="form-label col-xs-2 col-sm-1"><span class="c-red">*</span>种类名称</label>
             <div class="formControls col-xs-3 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="typeName" name="typeName">
+                {if condition="(!empty($list))"}
+                    <input type="hidden" name="id" value="{$list.0.id}">
+                    <input type="text" class="input-text" value="{$list.0.title}" placeholder="" id="typeName" name="typeName">
+                {else /}
+                    <input type="hidden" name="id" value="">
+                    <input type="text" class="input-text" value="" placeholder="" id="typeName" name="typeName">
+                {/if}
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-2 col-sm-1"><span class="c-red">*</span>种类排序</label>
             <div class="formControls col-xs-3 col-sm-3">
-                <input type="text" class="input-text" placeholder="0" name="typeSort" id="typeSort">
+                {if condition="(!empty($list))"}
+                    <input type="text" class="input-text" value="{$list.0.sort}" placeholder="0" name="typeSort" id="typeSort">
+                {else /}
+                    <input type="text" class="input-text" value="" placeholder="0" name="typeSort" id="typeSort">
+                {/if}
             </div>
         </div>
         <div class="row cl">
@@ -28,7 +38,19 @@
                     <select class="select" name="typeUp" size="1" id="typeUp">
                         <option value="" selected="">无</option>
                         {volist name="allType" id="type"}
-                            <option value="{$type.id}">{$type.title_show}</option>
+                            {if condition="(!empty($list))"}
+                                {if condition="($list.0.pid eq 0)"}
+                                    <option value="{$type.id}">{$type.title_show}</option>
+                                {else /}
+                                    {if condition="($list.0.pid eq $type.id)"}
+                                        <option value="{$type.id}" selected="">{$type.title_show}</option>
+                                    {else /}
+                                        <option value="{$type.id}">{$type.title_show}</option>
+                                    {/if}
+                                {/if}
+                            {else /}
+                                <option value="{$type.id}">{$type.title_show}</option>
+                            {/if}
                         {/volist}
                     </select>
                 </span> 
@@ -83,7 +105,7 @@ $(function(){
                             icon: 1,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function(){
-                            location.reload();
+                            window.location.href="{:url('Goods/listGoodsType')}";
                         }); 
                     }else{
                         layer.msg(ret.msg, {

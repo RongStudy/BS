@@ -13,7 +13,11 @@
 <div class="page-container">
     <div class="text-c">
         <form class="Huiform">
-            <input type="text" class="input-text" style="width:250px" placeholder="输入种类名称" id="title" name="title">
+            {if condition="!empty($title)"}
+                <input type="text" class="input-text" style="width:250px" placeholder="输入种类名称" value="{$title}" id="title" name="title">
+            {else /}
+                <input type="text" class="input-text" style="width:250px" placeholder="输入种类名称" value="" id="title" name="title">
+            {/if}
             <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜种类</button>
         </form>
     </div>
@@ -22,10 +26,10 @@
             <a href="{:url('Goods/listGoodsType')}" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe667;</i> 全部显示
             </a> 
-            <a href="{:url('Goods/listGoodsType',['user_type'=>3])}" id="showUser" class="btn btn-primary radius">
+            <a href="{:url('Goods/listGoodsType',['goods_type'=>1])}" id="showUser" class="btn btn-primary radius">
                 已启用
             </a>
-            <a href="{:url('Goods/listGoodsType',['user_type'=>1])}" class="btn btn-primary radius">
+            <a href="{:url('Goods/listGoodsType',['goods_type'=>2])}" class="btn btn-primary radius">
                 已禁用
             </a>
         </span> 
@@ -64,8 +68,10 @@
                         {/php}
                     </td>
                     <td>
-                        {eq name="v.status" value="1"}开启
-                        {else /}禁用
+                        {eq name="v.status" value="1"}
+                            <span class="label label-success radius" onclick="set({$v.id}, {$v.status})">启用</span>
+                        {else /}
+                            <span class="label label-success radius" onclick="set({$v.id}, {$v.status})">禁用</span>
                         {/eq}
                     </td>
                     <td>
@@ -78,21 +84,20 @@
                         {/eq}
                     </td>
                     <td>
-                        <a href=""><i class="Hui-iconfont">&#xe60c;</i>修改</a>
+                        <a href="{:url('Goods/addGoodsType', array('id'=>$v['id']))}"><i class="Hui-iconfont">&#xe60c;</i>修改</a>
+                        <a href="javascript:;" onclick="delType({$v.id})"><i class="Hui-iconfont">&#xe609;</i>删除</a>
                     </td>
-                    
-                    
                 </tr>
                 {/foreach}
             {else /}
                 <tr class="text-c">
-                    <td colspan="11">没有此用户</td>
+                    <td colspan="11">暂无数据</td>
                 </tr>
             {/if}
             {if condition="(!empty($list))"}
                 {if condition="($count eq 0)"}
                 <tr class="text-c">
-                    <td colspan="11">没有此用户</td>
+                    <td colspan="11">暂无数据</td>
                 </tr>
                 {/if}
             {/if}
@@ -106,12 +111,52 @@
 <script type="text/javascript">
     $('#subSearch').click(function(){
         var title = $('#title').val();
-        if(title == ''){
-            layer.msg('请输入搜索内容', {icon:2, time:1500}, function(){
-                $('#title').focus();
-            });
-            return false;
-        }
-    })
+        $.ajax({
+            type: 'post',
+            data: {title: title},
+            dataType: 'json',
+            url:  '{:url("Goods/listGoodsType")}',
+        });
+    });
+
+    // 商品种类启用禁用
+    function set(ids ,status){
+        $.ajax({
+            type: 'post',
+            data: {'ids': ids, 'status': status},
+            dataType: 'json',
+            url:  '{:url("Goods/editTypeStatus")}',
+            success: function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg, {time:2000, icon:1}, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(ret.msg, {time:2000, icon:2});
+                    return false;
+                }
+            }
+        });
+    }
+
+    // 删除商品种类
+    function delType(id){
+        $.ajax({
+            type: 'post',
+            data: {'id': id},
+            dataType: 'json',
+            url:  '{:url("Goods/delGoodsType")}',
+            success: function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg, {time:1500}, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(ret.msg, {time:1500});
+                    return false;
+                }
+            }
+        });
+    }
 </script> 
 {/block}

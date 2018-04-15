@@ -27,7 +27,7 @@ class Goods extends Base{
         }else{
             $map = array();
             $field = 'id, title';
-            $goodsType = $model->getType($this->uid, $map, $field);
+            $goodsType = $model->getType($this->uid, '', $map, $field);
             $this->assign('data', $goodsType);
             return $this->fetch();
         }
@@ -44,12 +44,22 @@ class Goods extends Base{
             $map['pid']   = input('typeUp');
             $map['sort']  = input('typeSort');
             $map['title'] = input('typeName');
-            $map['addtime'] = time();
 
-            // 验证是否重复
-            $obj = $model->getType($this->uid, array('title'=>input('typeName')));
-            if($obj){ return json(array('code'=>0, 'msg'=>'已存在此种类')); }
-            if($map){
+            $id = input('id');  // 判断是新增还是修改
+            if($id){
+                $map['edittime'] = time();
+                $res = $model->where(['id'=>$id])->update($map);
+                if($res) {
+                    return json(array('code' => 1, 'msg' => '修改成功'));
+                }else{
+                    return json(array('code'=>0, 'msg'=>'修改失败'));
+                }
+            }else{
+                // 验证是否重复
+                $obj = $model->getType($this->uid, array('title'=>input('typeName')));
+                if($obj){ return json(array('code'=>0, 'msg'=>'已存在此种类')); }
+
+                $map['addtime'] = time();
                 $res = $model->save($map);
                 if($res){
                     return json(array('code'=>1, 'msg'=>'添加成功'));
@@ -58,6 +68,12 @@ class Goods extends Base{
                 }
             }
         }else{
+            $id = input('id');
+            if($id){
+                $map['id'] = array('eq', $id);
+                $list = $model->getType($this->uid, '', $map);
+                $this->assign('list', $list);
+            }
             $tree = $model->getMenuTree();
             $data = $model->toFormatTree($tree);
             $this -> assign('allType', $data);
@@ -153,11 +169,59 @@ class Goods extends Base{
     
     // 1.商品种类列表
     public function listGoodsType(){
-        $title = input('title');
-        $list = model('GoodsType')->getType($this->uid, 10);
+        $map = array();
+        $title = input('title');    //按名称查询
+        $goods_type = input('goods_type');  // 按启用禁用查询
+
+        if($title){
+            $map['title'] = array('eq', $title);
+            $this->assign('title', $title);
+        }
+        if($goods_type){
+            $map['status'] = array('eq', $goods_type);
+        }
+        $list = model('GoodsType')->getType($this->uid, 10, $map);
         $this->assign('list', $list);
         $this->assign('count', count($list));
         return $this->fetch();
+    }
+
+    // 2.修改商品种类状态 （启用禁用）
+    public function editTypeStatus(){
+        $id = input('ids');
+        $status = input('status');
+        if(!$id || !$status){
+            $this->error('系统错误，请稍后再试');
+        }else{
+            $status = ($status == '1') ? '2' : '1';
+            $info = ($status == '1') ? '启用' : '禁用';
+            $map['status'] = $status;
+            $map['edittime'] = time();
+            $res = model('GoodsType')->editStatus($id, $map);
+            $res ? $this->success($info.'成功') : $this->error($info.'失败');
+        }
+    }
+
+    // 删除商品种类
+    public function delGoodsType(){
+        $id = input('id');
+        $list = model('GoodsType')->getType($this->uid);
+        $bool = true;
+        foreach($list as $k=>$v){
+            if($v['pid'] == $id){
+                $bool = false;
+                break;
+            }
+        }
+        if(!$bool){
+            $this->error('有下级分类关联，请先取消关联');
+        }else{
+            if(model('GoodsType')->where(['id'=>$id])->delete()){
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            }
+        }
     }
 }
 
