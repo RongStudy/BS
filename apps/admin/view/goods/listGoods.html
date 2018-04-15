@@ -17,9 +17,14 @@
     </a>
 </nav>
 <div class="page-container">
-    <div class="text-c search" style="display: none;">
+    <div class="text-c search" style="display:<?php if(!empty($searchData)){echo 'block';}else{echo 'none';}?>;">
         <form class="Huiform">
-            <input type="text" class="input-text" style="width:250px" placeholder="商品名称" id="" name="gName">
+            {if condition="!empty($searchData)"}
+                <input type="text" class="input-text" style="width:250px" placeholder="商品名称" id="" value="{$searchData.title}" name="gName">
+            {else /}
+                <input type="text" class="input-text" style="width:250px" placeholder="商品名称" id="" name="gName">
+            {/if}
+
             <button class="btn btn-success" id="subSearch" name=""><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
         </form>
     </div>
@@ -34,9 +39,6 @@
             <a href="{:url('Goods/listGoods')}" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe667;</i> 显示全部
             </a>
-        </span>
-        <span class="r">
-            123
         </span>
     </div>
 
@@ -165,16 +167,19 @@ function menuDel(ids, pids){
 /**
  * 商品搜索
  */
-var bool = false;
+/**
+ * 成员搜索
+ */
+var bool = $('.search').css('display');
+bool = (bool == 'block') ? true: false;
 function ser(){
-    if(!bool){
+    if(bool){
+        $('.search').css('display','none');
+        bool = false;
+    }else{
         $('.search').css('display','block');
         bool = true;
-    }else{
-        $('.search').css('display','none');
-        bool = false;;
     }
-    $('input[name="gName"]').val('');
 }
 
 $('#subSearch').click(function(){

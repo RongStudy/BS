@@ -11,17 +11,28 @@
     </a>
 </nav>
 <div class="page-container">
-    <div class="text-c">
+    <div class="text-c search" style="display:<?php if(!empty($searchData)){echo 'block';}else{echo 'none';}?>;">
         <form class="Huiform">
-            <input type="text" onfocus="" id="" name="dateMin" class="input-text dateMin" style="width:120px;">
-             -
-            <input type="text" onfocus="" id="" name="dateMax" class="input-text dateMax" style="width:120px;">
-            <input type="text" class="input-text" style="width:250px" placeholder="输入会员手机号" id="username" name="username">
-            <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+            {if condition="(!empty($searchData))"}
+                <input type="text" onfocus="" id="" value="{$searchData.dateMin}" name="dateMin" class="input-text dateMin" style="width:120px;">
+                 -
+                <input type="text" onfocus="" id="" value="{$searchData.dateMax}" name="dateMax" class="input-text dateMax" style="width:120px;">
+                <input type="text" class="input-text" style="width:250px" value="{$searchData.userName}" placeholder="输入会员手机号" id="username" name="username">
+                <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+            {else /}
+                <input type="text" onfocus="" id="" value="" name="dateMin" class="input-text dateMin" style="width:120px;">
+                -
+                <input type="text" onfocus="" id="" value="" name="dateMax" class="input-text dateMax" style="width:120px;">
+                <input type="text" class="input-text" style="width:250px" value="" placeholder="输入会员手机号" id="username" name="username">
+                <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+            {/if}
         </form>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
+    <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
+            <a href="javascript:;" onclick="ser()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe709;</i> 搜索
+            </a>
             <a href="{:url('Member/memberList')}" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe667;</i> 全部显示
             </a> 
@@ -149,7 +160,22 @@
             url: '{:url("Member/memberList")}'
         });
     }
-    
+
+    /**
+     * 成员搜索
+     */
+    var bool = $('.search').css('display');
+    bool = (bool == 'block') ? true: false;
+    function ser(){
+        if(bool){
+            $('.search').css('display','none');
+            bool = false;
+        }else{
+            $('.search').css('display','block');
+            bool = true;
+        }
+    }
+
     $('#subSearch').click(function () {
         var dateMin  = $('#dateMin').val();
         var dateMax  = $('#dateMax').val();
@@ -192,6 +218,11 @@
             })
         }
     }
+    /**
+     * 修改密码
+     * @param username
+     * @param uid
+     */
     function editPwd(username, uid){
         layer.prompt({
             title: '修改 ' + username + ' 的密码',

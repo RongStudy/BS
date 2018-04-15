@@ -94,21 +94,22 @@ class Goods extends Base{
      */
     public function listGoods(){
         // 获取商品
-        $field = 'gid,gTitle,gType,gUnit,gPrice';
         $map = array();
+        $searchData = array();
+        $field = 'gid,gTitle,gType,gUnit,gPrice';
         $title = input('gName');
         if($title){
+            $searchData['title'] = $title;
             $map['gTitle'] = !empty($title)?array('like', '%'.$title.'%'):'';
         }
         $list  = model('Goods')->getAll(10, $field, $map);
+        $count = count($list);
         // 获取商品类型
         $gType = model('GoodsType')->getType($this->uid, '', $map = array(), 'id,title');
-
-        $count = count($list);
-        $this->assign('count', $count);
         $this->assign('list', $list);
+        $this->assign('count', $count);
         $this->assign('gType', $gType);
-        // print_r($list);die;
+        $this->assign('searchData', $searchData);
         return $this->fetch();
     }
 
@@ -170,10 +171,12 @@ class Goods extends Base{
     // 1.商品种类列表
     public function listGoodsType(){
         $map = array();
+        $searchData = array();
         $title = input('title');    //按名称查询
         $goods_type = input('goods_type');  // 按启用禁用查询
 
         if($title){
+            $searchData['title'] = $title;
             $map['title'] = array('eq', $title);
             $this->assign('title', $title);
         }
@@ -183,6 +186,7 @@ class Goods extends Base{
         $list = model('GoodsType')->getType($this->uid, 10, $map);
         $this->assign('list', $list);
         $this->assign('count', count($list));
+        $this->assign('searchData', $searchData);
         return $this->fetch();
     }
 

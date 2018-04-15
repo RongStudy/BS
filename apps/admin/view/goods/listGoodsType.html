@@ -11,7 +11,7 @@
     </a>
 </nav>
 <div class="page-container">
-    <div class="text-c">
+    <div class="text-c search" style="display:<?php if(!empty($searchData)){echo 'block';}else{echo 'none';}?>;">
         <form class="Huiform">
             {if condition="!empty($title)"}
                 <input type="text" class="input-text" style="width:250px" placeholder="输入种类名称" value="{$title}" id="title" name="title">
@@ -21,8 +21,11 @@
             <button class="btn btn-success" id="subSearch"><i class="Hui-iconfont">&#xe665;</i> 搜种类</button>
         </form>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20">
+    <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
+            <a href="javascript:;" onclick="ser()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe709;</i> 搜索
+            </a>
             <a href="{:url('Goods/listGoodsType')}" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe667;</i> 全部显示
             </a> 
@@ -109,6 +112,22 @@
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>
 
 <script type="text/javascript">
+    /**
+     * 种类搜索
+     * @type {*}
+     */
+    var bool = $('.search').css('display');
+    bool = (bool == 'block') ? true: false;
+    function ser(){
+        if(bool){
+            $('.search').css('display','none');
+            bool = false;
+        }else{
+            $('.search').css('display','block');
+            bool = true;
+        }
+    }
+
     $('#subSearch').click(function(){
         var title = $('#title').val();
         $.ajax({

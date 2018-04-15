@@ -6,7 +6,8 @@ class Member extends Base{
 	 * 用户列表
 	 */
 	public function memberList(){
-        $map = [];
+        $map = array();
+        $searchData = array();
         $user_type = input('user_type');
         $userName  = input('username');
         $dateMin   = input('dateMin') ? strtotime(input('dateMin')) : '';
@@ -21,6 +22,10 @@ class Member extends Base{
             $map['user_type'] = $user_type;
         }
         $list = model('AuthMember')->searchMember($map);
+        if($userName || input('dateMin') || input('dateMax')) {
+            $searchData = array('userName'=>$userName, 'dateMin'=>input('dateMin'), 'dateMax'=>input('dateMax'));
+        }
+        $this->assign('searchData', $searchData);
         $this->assign('list', $list);
 	    $this->assign('count', count($list));
 	    return $this->fetch();
