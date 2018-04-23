@@ -35,7 +35,7 @@ class Attach extends Base{
     			if($ret){
     				$state = 1;
     				$msg  = $ret; // 数据库自增ID
-                    sleep(0.5); // 延迟0.5秒，解决id返回错误
+                    //sleep(0.5); // 延迟0.5秒，解决id返回错误
     				return json(array('state'=>$state, 'path'=>$msg));
     			}else{
     				$state = 0;

@@ -231,7 +231,10 @@ $(function(){
                 });
                 return false;
             }
-
+            
+            var imgNum = $('#gImg').val();
+            imgNum = imgNum.substring(1);
+            $('#gImg').val(imgNum);
             var obj = decodeURIComponent($('#form-article-add').serialize());
             $.ajax({
                 type: 'post',
@@ -267,6 +270,7 @@ $(function(){
 });
 
 // 删除文件夹下的图片
+/*
 $('input[type="file"]').click(function(){
     var gImg =  $('#gImg').val();
     if(gImg){
@@ -279,7 +283,7 @@ $('input[type="file"]').click(function(){
     }
     // $('#gImg').val('');
 });
-
+*/
 /**
  * layui图片插件
  * @param  {[type]} ){                 var layer [description]

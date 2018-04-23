@@ -34,6 +34,32 @@ class Goods extends Base{
     }
 
     /**
+     * 编辑商品
+     */
+    public function editGoods(){
+        $gid = input('gid');
+        if(request()->isPost()){
+            $map = input();
+            dump($map);
+            die;
+        }else{
+            $goods = model('Goods')->getOne(array('gid'=>$gid));
+            $goodsType = model('GoodsType')->getType($this->uid, '', array(), 'id, title');
+            $map['id'] = array('in', $goods['gImg']);
+            $img = model('Attach')->getPhoto($map);
+            $goodsImages = photoPath($img, 1);          // 获取缩略图
+            $goodsImagesClarity = photoPath($img, 2);   // 获取大图
+            $this->assign('img', $goods['gImg']);
+            $this->assign('goods', $goods);
+            $this->assign('data', $goodsType);
+            $this->assign('goodsImages', $goodsImages);
+            $this->assign('goodsImagesClarity', $goodsImagesClarity);
+            $this->assign('edit', $goods['gid']);
+            return $this->fetch('addGoods');
+        }
+    }
+
+    /**
      * 添加商品种类
      */
     public function addGoodsType(){
@@ -137,29 +163,6 @@ class Goods extends Base{
             return $this->fetch();
         }else{
             $this->error('非法请求，请稍候重试');
-        }
-    }
-
-    /**
-     * 编辑商品
-     */
-    public function goodsEdit(){
-        $gid = input('gid');
-        if(request()->isPost()){
-
-        }else{
-            $goods = model('Goods')->getOne(array('gid'=>$gid));
-            $goodsType = model('GoodsType')->getType($this->uid, '', array(), 'id, title');
-            $map['id'] = array('in', $goods['gImg']);
-            $img = model('Attach')->getPhoto($map);
-            $goodsImages = photoPath($img, 1);          // 获取缩略图
-            $goodsImagesClarity = photoPath($img, 2);   // 获取大图
-            $this->assign('img', $goods['gImg']);
-            $this->assign('goods', $goods);
-            $this->assign('data', $goodsType);
-            $this->assign('goodsImages', $goodsImages);
-            $this->assign('goodsImagesClarity', $goodsImagesClarity);
-            return $this->fetch('addGoods');
         }
     }
 

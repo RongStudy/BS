@@ -221,13 +221,20 @@ $.fn.bindUpload = function () {
                     itemList.eq(i).find(".delete").remove();
                     var callInput = $(myData.callbackPath);
                     var val = callInput.val();
+                    var path = new Array();
                     if (myData.num && i == (myData.num - 1) || i == (max - 1)) {
                         // callInput.val(val + item.name + "," + data.path);
-                        callInput.val(val + data.path);
+                        path.push(data.path);
+                        
                     } else {
                         // callInput.val(val + item.name + "," + data.path + "|");
-                        callInput.val(val + data.path + ",");
+                        path.push(data.path);
                     }
+                    var callbackStr = '';
+                    for(var index in path){
+                        callbackStr = ',' + path[index];
+                    }
+                    callInput.val(val + callbackStr);
                 } else {
                     itemList.eq(i).find(".state").html(data.errmsg);
                     itemList.eq(i).find(".err").width("100%").html(data.errmsg);
