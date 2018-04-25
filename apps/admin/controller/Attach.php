@@ -14,10 +14,9 @@ class Attach extends Base{
     		$image = \think\Image::open(request()->file('file'));
 
     		// 缩略图处理
-    		$thumbName = md5(time());
+    		$thumbName = md5(time().make_random());
     		$res = $image->thumb(150, 150, \think\Image::THUMB_CENTER)
     		  		->save(ROOT_PATH . 'public'.DS.'uploads'.DS.'thumb'. DS . $thumbName . '.' . $image->type());
-
     		if($info){
     			$map['name'] 	  = $info->getFilename();
     			$map['addtime']   = time();
