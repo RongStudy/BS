@@ -5,20 +5,27 @@ use think\Controller;
 class Index extends Controller{
     public function getFloor(){
     	$goods = model('Goods')->getAll();
-    	// $goods['gImg'];
     	$tempImg = [];
     	$goods_type = model('GoodsType')->getAll();
-    	foreach ($goods as $key => $value) {
+    	
+        // 获取商品缩略图(每个商品一张)
+        foreach ($goods as $key => $value) {
     		$tempImg[] = explode(',', $value['gImg'])[0];
     	}
-    	
     	$tempImg = implode(',', $tempImg);
-    	// dump($tempImg);die;
     	$goodsImg = model('Attach')->getPhoto(['id'=>['in', $tempImg]]);
-    	foreach ($goodsImg as $key => $value) {
-    		$goods[]
-    	}
-    	return json(array('status'=>'1', 'data'=>array('goods'=>$goods, 'goods_type'=>$goods_type)));
+    	$img = photoPath($goodsImg ,1);
+
+    	return json(
+            array(
+                'status'=>'1', 
+                'data'=>array(
+                    'img'=>$img,
+                    'goods'=>$goods, 
+                    'goods_type'=>$goods_type
+                )
+            )
+        );
     }
 }
 
