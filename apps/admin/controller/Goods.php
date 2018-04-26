@@ -82,7 +82,7 @@ class Goods extends Base{
                 }
             }else{
                 // 验证是否重复
-                $obj = $model->getType($this->uid, array('title'=>input('typeName')));
+                $obj = $model->getType($this->uid, '', array('title'=>input('typeName')));
                 if($obj){ return json(array('code'=>0, 'msg'=>'已存在此种类')); }
 
                 $map['addtime'] = time();
