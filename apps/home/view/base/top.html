@@ -1,0 +1,140 @@
+<div class="soubg">
+	<div class="sou">
+        <span class="fr">
+        	<span class="fl">
+                你好，
+                {if condition="(!empty($info))"}
+                    欢迎&nbsp;{$info.username}&nbsp;
+                    <a href="{:url('AuthMember/logout')}" style="color:#ff4e00;">退出登录</a>&nbsp;|&nbsp;
+                    {else /}
+                    请<a href="{:url('AuthMember/login')}">登录</a>
+                    <a href="{:url('AuthMember/register')}" style="color:#ff4e00;">免费注册</a>&nbsp;|&nbsp;
+                {/if}
+                
+                <a href="{:url('Goods/myOrder')}">我的订单</a>&nbsp;|
+                <a href="{:url('Goods/listCart')}">购物车</a>&nbsp;|
+            </span>
+        	<!-- <span class="ss" style="width: auto;">
+            	<div class="ss_list">
+                	<a href="#">我的收藏</a>
+                </div>
+            </span> -->
+            <span class="fl">&nbsp;关注我：</span>
+            <span class="s_sh"><a href="#" class="sh2">微信</a></span>
+        </span>
+    </div>
+</div>
+<div class="top">
+    <div class="logo"><a href="{:url('Index/index')}"><img src="{$static}/images/logo.png" /></a></div>
+    <div class="div_show_s"><img src="{$static}/images/wx.jpg" width="120px" height="120px;"></div>
+    <div class="search">
+    	<form action="{:url('Goods/searchList')}" method="post" id="search_form">
+            {if condition="(isset($search))"}
+                <input type="text" value="{$search}" placeholder="输入您想查询的商品" name="search_input" class="s_ipt" />
+            {else /}
+                <input type="text" value="" placeholder="输入您想查询的商品" name="search_input" class="s_ipt"  onkeypress="javascript:return sub();" />
+            {/if}
+            <input type="button" value="搜索" onclick="return sub();" class="s_btn"/>
+        </form>
+    </div>
+
+    {if condition="(!isset($no_show_order))"}
+    <div class="i_car">
+        <div class="car_t">购物车 [ <span>{php}echo count($goods_data);{/php}</span> ]</div>
+        <div class="car_bg">
+            {if condition="(!empty($info))"}
+                <!--Begin 购物车已登录 Begin-->
+                <ul class="cars">
+                    {php}$all_price = 0;{/php}
+                    {foreach name="goods_data" item="g_d"}
+                    {php}$all_price += $list[$key]['price']*$list[$key]['count'];{/php}
+                    <li>
+                        <div class="img">
+                            <a href="#">
+                                <img src="{$list[$key]['thumb']}" width="58" height="58" />
+                            </a>
+                        </div>
+                        <div class="name">
+                            <a href="#">{$g_d.gTitle}</a>
+                        </div>
+                        <div class="price"><font color="#ff4e00">￥{$list[$key]['price']}</font> X{$list[$key]['count']}</div>
+                    </li>
+                    {/foreach}
+                    
+                </ul>
+                <div class="price_sum">共计&nbsp; 
+                    <font color="#ff4e00">￥</font>
+                    <span class="all_price">{php}echo $all_price;{/php}</span>
+                </div>
+                <div class="price_a"><a href="{:url('Goods/listCart')}">去购物车结算</a></div>
+                <!--End 购物车已登录 End-->
+                {else /}
+                <!--Begin 购物车未登录 Begin-->
+                <div class="un_login">还未登录！<a href="Login.html" style="color:#ff4e00;">马上登录</a> 查看购物车！</div>
+                <!--End 购物车未登录 End-->
+            {/if}
+            
+        </div>
+    </div>
+    {/if}
+    
+</div>
+<!--End Header End--> 
+<!--Begin Menu Begin-->
+<div class="menu_bg">
+	<div class="menu">
+    	<!--Begin 商品分类详情 Begin-->    
+    	<div class="nav">
+        	<div class="nav_t">全部商品分类</div>
+            <div class="leftNav">
+                <ul class="leftNavUl">
+                <?php 
+                    $count = 0;
+                ?>
+                {foreach name="up_type" item='ut'}
+                {php}$count++;{/php}
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="{$static}/images/nav1.png" /></span>
+                            <span class="fl"><a href="{:url('Goods/searchList', ['type'=>$ut['id']])}">{$ut.title}</a></span>
+                        </div>
+
+                        <div class="zj" style="top:-<?php echo ($count-1)*40;?>px;">
+                            <div class="zj_l">
+                                <div class="zj_l_c" style="color: red;">
+                                    {foreach name="down_type" item='dt'}
+                                        {if condition="$dt['pid'] eq $ut['id']"}
+                                            <a href="{:url('Goods/goodsList', ['type'=>$dt['id']])}">{$dt.title}</a>
+                                        {/if}
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {/foreach}                  	
+                </ul>            
+            </div>
+        </div>  
+        <!--End 商品分类详情 End-->                                                     
+    	<ul class="menu_r">
+            <li><a href="{:url('Index/index')}">首页</a></li>
+            {foreach name="up_type" item='ut'}
+                <li><a href="{:url('Goods/searchList', ['type'=>$ut['id']])}">{$ut.title}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <script>
+        /**
+         * 搜索商品
+         * @return {[type]} [description]
+         */
+        function sub(){
+            var search = $('input[name="search_input"]').val();
+            if(search!=''){
+                $('#search_form').submit();
+            }else{
+                return false;
+            }
+        }
+    </script>
+</div>

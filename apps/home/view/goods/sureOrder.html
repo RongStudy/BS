@@ -1,0 +1,185 @@
+{extend name="base/main"}
+{block name="body"}
+{include file='base/top' /}
+<script type="text/javascript" src="{$static}/js/n_nav.js"></script>   
+<script type="text/javascript" src="{$static}/js/num.js">
+    var jq = jQuery.noConflict();
+</script>     
+<script type="text/javascript" src="{$static}/js/shade.js"></script>
+<!-- <link rel="stylesheet" href="__PUBLIC__/plugins/layui/css/layui.css"> -->
+<!-- <script src="__PUBLIC__/plugins/layui/layui.js"></script> -->
+<style>
+    .leftNav{display: none;}
+    div, table{
+        margin: 0 auto;
+    }
+    .fr{
+        font-size: 12px;
+    }
+</style>
+
+<div class="i_bg">  
+    <div class="content mar_20">
+        <img src="{$static}/images/img2.jpg" />        
+    </div>
+    
+    <!--Begin 第二步：确认订单信息 Begin -->
+    <div class="content mar_20">
+        <div class="two_bg">
+            <div class="two_t">
+                <span class="fr"><a href="#">修改</a></span>商品列表
+            </div>
+            <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="car_th" width="550">商品名称</td>
+                    <td class="car_th" width="140">属性</td>
+                    <td class="car_th" width="150">购买数量</td>
+                    <td class="car_th" width="130">小计</td>
+                </tr>
+                {foreach name='goodsList' item='gL'}
+                    <tr>
+                        <td>
+                            <div class="c_s_img">
+                                <img src="{$gL.img_path}" width="73" height="73" />
+                            </div>
+                            {$gL.gTitle}
+                        </td>
+                        <td align="center">{$gL.gUnit}</td>
+                        <td align="center">{$gL.count}</td>
+                        <td align="center" style="color:#ff4e00;">￥{$gL.total_price}</td>
+                    </tr>
+                {/foreach}
+                <tr>
+                    <td colspan="5" align="right" style="font-family:'Microsoft YaHei';">
+                    商品总价：￥{$all_price}
+                    </td>
+                </tr>
+            </table>
+
+            <div id="address">
+                <input type="hidden" name="order_id" value="{$orderid}">
+                {if condition="(empty($address))"}
+                    <div class="two_t">
+                        <span class="fr">
+                            <a href="#" class="addAddress">添加</a>
+                        </span>
+                        收货人信息
+                    </div>
+                    <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td colspan="3">暂无收货信息</td>
+                        </tr>
+                    </table>
+                {else /}
+                    <div class="two_t">
+                        <span class="fr">
+                            <!-- <a href="#">修改</a> -->
+                        </span>
+                        收货人信息
+                    </div>
+                    {foreach name='address' item='location'}
+                        <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <input type="hidden" name="addressId" value="{$location.id}">
+                                <td class="p_td" width="160">收件人名称</td>
+                                <td width="395">{$location.name}</td>
+                                <td class="p_td" width="160">手机号码</td>
+                                <td width="395">{$location.phone}</td>
+                            </tr>
+                            <tr>
+                                <td class="p_td">详细地址</td>
+                                <td>{$location.address}</td>
+                                <td class="p_td">邮政编码</td>
+                                <td>{$location.postalcode}</td>
+                            </tr>
+                        </table>
+                    {/foreach}
+                {/if}
+            </div>
+            
+            
+            <div class="two_t">
+                支付方式
+            </div>
+            <ul class="pay">
+                <input type="hidden" id="pay_name" name="pay_name" value="">
+                <li attr_payName='1'>余额支付<div class="ch_img"></div></li>
+                <li attr_payName='2'>货到付款<div class="ch_img"></div></li>
+                <li attr_payName='3'>支付宝<div class="ch_img"></div></li>
+            </ul>
+            <div class="two_t">
+                其他信息
+            </div>
+            <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                <tr valign="top">
+                    <td align="right" style="padding-right:0;"><b style="font-size:14px;">订单附言：</b></td>
+                    <td style="padding-left:0;">
+                        <textarea class="add_txt" name="message" id='message' style="width:860px; height:50px;"></textarea>
+                    </td>
+                </tr>
+            </table>
+            <table border="0" style="width: 1115px;margin-top:20px;padding-right: 0px;" cellspacing="0" cellpadding="0">
+              <tr height="70">
+                <td align="right">
+                    <b style="font-size:14px;">应付款金额：<span style="font-size:22px; color:#ff4e00;">￥{$all_price}</span></b>
+                </td>
+              </tr>
+              <tr height="70">
+                <td align="right"><a href="#"><img src="{$static}/images/btn_sure.gif" class="sub" /></a></td>
+              </tr>
+            </table>
+        </div>
+    </div>
+    <!--End 第二步：确认订单信息 End-->
+    <script src="__PUBLIC__/plugins/layer/layer.js"></script>
+    <script>
+
+        $('.pay li').click(function(){
+            $('.pay li').removeClass('checked');
+            $(this).addClass('checked');
+            $('input[name="pay_name"]').val($(this).attr('attr_payName'));
+        });
+
+        $('.sub').click(function(){
+            var pay_name = $('#pay_name').val();
+            if(pay_name == ''){
+                layer.msg('请选择支付方式', {time: 1500});
+                return false;
+            }
+            var message = $('#message').val();
+            var order_id = $('input[name="order_id"]').val();
+
+            $.post(
+                '{:url("Goods/sureOrder")}', 
+                {'pay_name': pay_name, 'message': message, 'order_id':order_id}, 
+                function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg, {time:1500}, function(){
+                            window.location.href="{:url('Goods/finishOrder')}";
+                        });
+                    }else{
+                        layer.msg(ret.msg, {time:1500});
+                        return false;
+                    }
+                }, 
+            'json');           
+        });
+
+        /**
+         * 添加收货地址
+         * @param  {[type]} ){                         var $ [description]
+         * @return {[type]}     [description]
+         */
+        $('.addAddress').click(function(){
+            layer.open({
+                type: 2,
+                title: '添加收货地址',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['550px', '350px'],
+                content: '{:url("Address/addAddress")}',
+            });
+        });
+    </script>
+{include file='base/footer' /}
+{/block}

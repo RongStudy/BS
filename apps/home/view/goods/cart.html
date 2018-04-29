@@ -1,0 +1,249 @@
+{extend name="base/main"}
+{block name="body"}
+{include file='base/top' /}
+<link type="text/css" rel="stylesheet" href="{$static}/css/style.css" />   
+            
+<script type="text/javascript" src="{$static}/js/n_nav.js"></script>   
+
+<script type="text/javascript" src="{$static}/js/num.js">
+	var jq = jQuery.noConflict();
+</script>     
+
+<script type="text/javascript" src="{$static}/js/shade.js"></script>
+<style>
+    .leftNav{
+        display: none;
+    }
+</style>
+<div class="i_bg">
+    <div class="content mar_20">
+    	<img src="{$static}/images/img1.jpg" />        
+    </div>
+    
+    <!--Begin 第一步：查看购物车 Begin -->
+    <div class="content mar_20">
+    	<table border="0" class="car_tab" style="width:1200px; margin-bottom:50px;" cellspacing="0" cellpadding="0">
+    		<tr>
+    			<td class="car_th" width="400">商品名称</td>
+    			<td class="car_th" width="140">属性</td>
+    			<td class="car_th" width="150">购买数量</td>
+    			<td class="car_th" width="130">小计</td>
+    			<td class="car_th" width="150">操作</td>
+    		</tr>
+    		{if condition="(empty($list))"}
+    			<tr>
+    				<td colspan="5" style="text-align: center;">暂无商品</td>
+    			</tr>
+    		{else /}
+    			{foreach name="list" item='data'}
+	    			<tr>
+		    			<td>
+		    				<input type="hidden" name="gid" value="{$goods_data[$key]['gid']}">
+		    				<input type="hidden" name="cart_id" value="{$data['id']}">
+		    				<div class="c_s_img"><img src="{$data.thumb}" width="73" height="73" /></div>
+		    				{$goods_data[$key]['gTitle']}
+		    			</td>
+		    			<td align="center">{$goods_data[$key]['gUnit']}</td>
+		    			<td align="center">
+		    				<div class="c_num">
+		    					<input type="button" value="" onclick="jianUpdate1(jq(this));" class="car_btn_1" />
+		    					<input type="text" value="{$data.count}" name="" class="car_ipt" />  
+		    					<input type="button" value="" onclick="addUpdate1(jq(this));" class="car_btn_2" />
+		    				</div>
+		    			</td>
+		    			<td align="center" style="color:#ff4e00;">
+		    				<label for="">单价：</label><span class="one_price">{$data.price}</span>元<br>
+		    				<label for="">总价：</label><span class="total_price"><?php echo $data['price']*$data['count']?></span>元
+		    			</td>
+		    			<td align="center">
+		    				<a class="delOneCart" attr_id="{$data.id}">删除</a>
+		    			</td>
+		    		</tr>
+	    		{/foreach}
+	    		<tr height="70">
+	    			<td colspan="6" style="font-family:'Microsoft YaHei'; border-bottom:0;">
+	    				<label class="r_rad"></label>
+	    				<span class="fr">商品总价：
+	    					<b style="font-size:22px; color:#ff4e00;">￥<span class="all_price">2899</span></b>
+	    				</span>
+	    			</td>
+	    		</tr>
+	    		<tr valign="top" height="150">
+	    			<td colspan="6" align="right">
+	    				<a href="#" class="clearCart">
+	    					<img src="{$static}/images/clearCart.png" />
+	    				</a>&nbsp; &nbsp; 
+	    				<a href="#" onclick="b_sure()"><img src="{$static}/images/buy2.gif" /></a>
+	    			</td>
+	    		</tr>
+    		{/if}
+        </table>
+        
+    </div>
+	<!--End 第一步：查看购物车 End--> 
+    
+    <!--Begin 弹出层-删除商品 Begin-->
+    <div id="fade" class="black_overlay"></div>
+    <div id="MyDiv" class="white_content">             
+        <div class="white_d">
+            <div class="notice_t">
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('MyDiv','fade')"><img src="{$static}/images/close.gif" /></span>
+            </div>
+            <div class="notice_c">
+                <table border="0" align="center" style="font-size:16px;" cellspacing="0" cellpadding="0">
+                  <tr valign="top">
+                    <td class="clearCartInfo">您确定要把该商品移除购物车吗？</td>
+                  </tr>
+                  <tr height="50" valign="bottom">
+                    <td>
+                    	<a href="#" class="b_sure del_sure" onclick="del_sure()">确定</a>
+                    	<a href="#" class="b_buy" onclick="CloseDiv_1('MyDiv','fade')">取消</a>
+                    </td>
+                  </tr>
+                </table>
+                    
+            </div>
+        </div>
+    </div>    
+    <!--End 弹出层-删除商品 End-->
+    <script src="__PUBLIC__/plugins/layer/layer.js"></script>
+    <script>
+    	$(function(){
+    		allPrice();
+    	})
+    	/**
+    	 * 减数量&加数量
+    	 * @return {[type]} [description]
+    	 */
+    	function changePrice(t){
+    		// 计算当前商品的总价格
+    		var total_price = 0;
+    		var goods_count = parseInt($(t).parent().children('.car_ipt').val());
+    		var one_price   = Number($(t).parent().parent().next().children('.one_price').text());
+    		total_price = goods_count*one_price;
+    		return total_price;
+    	}
+
+    	/**
+    	 * 统计所有金额
+    	 * @return {[type]} [description]
+    	 */
+    	function allPrice(){
+    		var all_price = 0;
+    		$('.total_price').each(function(){
+    			all_price += Number($(this).text());
+    		});
+    		$('.all_price').text(all_price);
+    	}
+    	// 减数量
+    	$('.car_btn_1').click(function(){
+    		var total_price = changePrice(this);
+    		$(this).parent().parent().next().children('.total_price').text(total_price);
+    		allPrice();
+    	});
+
+    	// 加数量
+    	$('.car_btn_2').click(function(){
+    		var total_price = changePrice(this);
+    		$(this).parent().parent().next().children('.total_price').text(total_price);
+    		allPrice();
+    	});
+
+    	/**
+    	 * 确认结算
+    	 * @return {[type]} [description]
+    	 */
+    	function b_sure(){
+    		var obj = '';
+    		var gid = '';
+    		var count = '';
+    		var cart_id = '';
+    		var one_price = '';
+    		var total_price = '';
+    		var all_price = '';
+
+    		// 订单id
+    		$('input[name="cart_id"]').each(function(){
+    			cart_id = cart_id + ',' +$(this).val();
+    		});
+    		cart_id = cart_id.substring(1);
+
+    		// 商品id
+    		$('input[name="gid"]').each(function(){
+    			gid = gid + ',' +$(this).val();
+    		});
+    		gid = gid.substring(1);
+
+    		// 购买数量
+    		$('.car_ipt').each(function(){
+    			count = count + ',' +$(this).val();
+    		});
+    		count = count.substring(1);
+
+    		// 单价
+    		$('.one_price').each(function(){
+    			one_price = one_price + ',' +$(this).text();
+    		});
+    		one_price = one_price.substring(1);
+
+    		// 单价商品总价
+    		$('.total_price').each(function(){
+    			total_price = total_price + ',' +$(this).text();
+    		});
+    		total_price = total_price.substring(1);
+
+    		// 总共付款钱数
+    		all_price = $('.all_price').text();
+
+    		obj = 'cart_id='+cart_id+'&gid='+gid+'&count='+count+'&one_price='+one_price+'&total_price='+total_price+'&all_price='+all_price;
+
+    		$.post('{:url("Goods/payment")}', obj, function(ret){
+    			if(ret.code == 1){
+                    window.location.href="{:url('Goods/sureOrder')}";
+                }else{
+                    layer.msg(ret.msg, {time:1500});
+                    return false;
+                }
+    		},'json');
+    	}
+
+    	/**
+    	 * [清空购物车]
+    	 * @return {[type]}     [description]
+    	 */
+    	$('.clearCart').click(function(){
+    		$('.clearCartInfo').text('您确定要清空购物车吗？');
+    		$('.del_sure').attr('onclick', 'del_sure(0)');
+    		ShowDiv_1('MyDiv','fade');
+    	});
+
+    	/**
+    	 * [删除单个购物车商品]
+    	 * @return {[type]}     [description]
+    	 */
+    	$('.delOneCart').click(function(){
+    		$('.del_sure').attr('onclick', 'del_sure('+$(this).attr('attr_id')+')');
+    		ShowDiv_1('MyDiv','fade');
+    	});
+
+    	/**
+    	 * 删除购物车中商品
+    	 * @param  {[type]} id [==0：删除全部 !=0：删除指定]
+    	 * @return {[type]}    [description]
+    	 */
+    	function del_sure(id){
+    		CloseDiv_1('MyDiv','fade');
+    		$.post('{:url("Cart/delCart")}', {'id': id}, function(ret){
+    			if(ret.code == 1){
+    				layer.msg(ret.msg, {time:1500}, function(){
+    					location.reload();
+    				});
+    			}else{
+    				layer.msg(ret.msg, {time:1500});
+    				return false;
+    			}
+    		}, 'json');
+    	}
+    </script>
+{include file='base/footer' /}
+{/block}

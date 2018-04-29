@@ -1,0 +1,114 @@
+{extend name="base/main"}
+{block name="body"}
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 订单管理
+    <span class="c-gray en">&gt;</span> 订单列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+
+
+<div class="page-container">
+    <!-- <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+            </a>
+            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            </a>
+        </span>
+    </div> -->
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+            <tr>
+                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong></strong> 条</span></th>
+            </tr>
+            <tr class="text-c">
+                <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+                <th width="40">ID</th>
+                <th width="150">订单编号</th>
+                <th width="90">订单总价</th>
+                <th width="90">支付状态</th>
+                <th width="90">支付方式</th>
+                <th width="130">发货状态</th>
+                <th width="150">订单时间</th>
+                <th width="150">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="orderList" item="ol"}
+            <tr class="text-c">
+                <td>{$ol.id}</td>
+                <td>{$ol.order_sn}</td>
+                <td>{$ol.all_price}元</td>
+                <td>
+                    {eq name='ol.pay_status' value='1'}
+                    已支付
+                    {else /}待支付
+                    {/eq}
+                </td>
+                <td>
+                    {$pay_name[$ol['pay_name']]}
+                </td>
+                <td>
+                    {$send_status[$ol['send_status']]}
+                </td>
+                <td>{$ol.addtime|date="Y-m-d H:i:s",###}</td>
+                <td class="td-manage">
+                {eq name='ol.pay_status' value='1'}
+                    {eq name='ol.send_status' value='0'}
+                        <!-- <a onclick=""><i class="Hui-iconfont">&#xe601;</i>发货</a> -->
+                        <a href="javascript:;">
+                            <span class="label label-success radius" onclick="send({$ol.id})">发货</span>
+                        </a>
+                    {else /}
+                        <span class="label label-warning radius">
+                            {eq name='ol.send_status' value='1'}已发货
+                            {else /}已收货
+                            {/eq}
+                        </span>
+                    {/eq}
+                {/eq}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    {if condition="(empty($orderList))"}
+        {else /}
+    {$orderList->render()}
+    {/if}
+
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="{$static}/h_ui/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+<script>
+    function send(order_id){
+        $.ajax({
+            type: 'post',
+            data: {'order_id': order_id},
+            dataType: 'json',
+            url:  '{:url("Order/send")}',
+            success: function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg, {time:1500}, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(ret.msg, {time:1500});
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+
+<!--/请在上方写此页面业务相关的脚本-->
+
+{/block}
