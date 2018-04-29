@@ -100,14 +100,20 @@ function photoPath($data, $type = 1){
 }
 
 /**
- * [make_password description]
- * @param  integer $length [description]
- * @return [type]          [description]
+ * [make_random 生成随机字符]
+ * @param  integer $length     [生成的长度]
+ * @param  boolean $hasSpecial [是否包含特殊字符]
+ * @return [string]            [description]
  */
-function make_random( $length = 8 ){  
-    // 随机数字符集，可任意添加你需要的字符
-    $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's','t', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D','E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@','#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '[', ']', '{', '}', '<', '>', '~', '`', '+', '=', ',', '.', ';', ':', '/', '?', '|'
-    );
+function make_random( $length=8, $hasSpecial=true ){  
+    if(!$hasSpecial){
+        // 随机数字符集，可任意添加你需要的字符
+       $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's','t', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D','E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        );
+    }else{
+         $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's','t', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D','E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@','#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '[', ']', '{', '}', '<', '>', '~', '`', '+', '=', ',', '.', ';', ':', '/', '?', '|'
+        );
+    }
     $keys = array_rand($chars, $length); // 在 $chars 中随机取 $length 个数组元素键名  
     $random = '';  
     for($i = 0; $i < $length; $i++){  
@@ -115,3 +121,38 @@ function make_random( $length = 8 ){
     }  
     return $random;  
 }  
+
+/**
+ * 商品种类
+ * @return [type] [description]
+ */
+function goods_type(){
+    $goodsTypeModel = model('GoodsType');
+    $list = $goodsTypeModel->getAll();
+    
+    $up_type = array();
+    $down_type = array();
+    foreach ($list as $key => $value) {
+        if($value['pid'] == 0){
+            $up_type[] = $value;
+        }else{
+            $down_type[] = $value;
+        }
+    }
+    return array('up_type'=>$up_type, 'down_type'=>$down_type);
+}
+
+/**
+ * 时间字符串
+ * @return [string] [description]
+ */
+function timeStr(){
+    $return = '';
+    $time = date('Y-m-d H:i:s', time());
+    $time = explode(' ', $time);
+    $date = $time[0];
+    $time = $time[1];
+    $return = str_replace('-', '', $date).str_replace(':', '', $time)
+    ;
+    return $return;
+}
