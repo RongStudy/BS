@@ -3,10 +3,16 @@ namespace app\api\controller;
 use think\Controller;
 
 class Index extends Controller{
+
+    /**
+     * 楼层信息及商品
+     * @return [type] [description]
+     */
     public function getFloor(){
+
     	$goods = model('Goods')->getAll();
     	$tempImg = [];
-    	$goods_type = model('GoodsType')->getAll();
+    	$goods_type = model('GoodsType')->getAll(array('pid'=>'0'));
     	
         // 获取商品缩略图(每个商品一张)
         foreach ($goods as $key => $value) {
@@ -15,13 +21,9 @@ class Index extends Controller{
     	}
         rsort($tempImgId);
         $tempImgId2 = $tempImgId;
-        // dump($tempImgId);
-
     	$tempImgId = implode(',', $tempImgId);
     	$goodsImg = model('Attach')->getPhoto(['id'=>['in', $tempImgId]]);
     	$img = photoPath($goodsImg ,1);
-        // dump($img);
-
         $img2 = array_combine($tempImgId2, $img);
         foreach ($img2 as $key => $value) {
             foreach ($goods as $k => $v) {
@@ -30,13 +32,34 @@ class Index extends Controller{
                 }
             }
         }
-    	return json(
+    	return json(array('status'=>'1', 'data'=>array('goods'=>$goods, 'goods_type'=>$goods_type)));
+    }
+
+    /**
+     * 商品种类
+     * @return [type] [description]
+     */
+    public function getType(){
+        $goodsTypeModel = model('GoodsType');
+        $list = $goodsTypeModel->getAll();
+        
+        $up_type = array();
+        $down_type = array();
+        foreach ($list as $key => $value) {
+            if($value['pid'] == 0){
+                $up_type[] = $value;
+            }else{
+                $down_type[] = $value;
+            }
+        }
+
+        return json(
             array(
-                'status'=>'1', 
+                'status'=>'1',
                 'data'=>array(
-                    'goods'=>$goods, 
-                    'goods_type'=>$goods_type
-                )
+                    'up_type'=>$up_type,
+                    'down_type'=>$down_type,
+                ),
             )
         );
     }

@@ -1,5 +1,6 @@
 {extend name="base/main"}
 {block name="body"}
+{include file='base/top' /}
 <style type="text/css">
     .name, .price{
         text-indent: 25px!important;
@@ -12,123 +13,7 @@
     }
 </style>
 <!--Begin Header Begin-->
-<div class="soubg">
-	<div class="sou">
-        <span class="fr">
-        	<span class="fl">
-                你好，
-                {if condition="(!empty($info))"}
-                    欢迎&nbsp;{$info.username}&nbsp;
-                    <a href="{:url('AuthMember/logout')}" style="color:#ff4e00;">退出登录</a>&nbsp;|&nbsp;
-                    {else /}
-                    请<a href="{:url('AuthMember/login')}">登录</a>
-                    <a href="{:url('AuthMember/register')}" style="color:#ff4e00;">免费注册</a>&nbsp;|&nbsp;
-                {/if}
-                
-                <a href="#">我的订单</a>&nbsp;|
-            </span>
-        	<span class="ss" style="width: auto;">
-            	<div class="ss_list">
-                	<a href="#">我的收藏</a>
-                </div>
-            </span>
-            <span class="fl">|&nbsp;关注我：</span>
-            <span class="s_sh"><a href="#" class="sh2">微信</a></span>
-        </span>
-    </div>
-</div>
-<div class="top">
-    <div class="logo"><a href="Index.html"><img src="{$static}/images/logo.png" /></a></div>
-    <div class="div_show_s"><img src="{$static}/images/wx.jpg" width="120px" height="120px;"></div>
-    <div class="search">
-    	<form>
-        	<input type="text" value="" placeholder="输入您想查询的商品" name="search_input" class="s_ipt" />
-            <input type="button" value="搜索" class="s_btn" />
-        </form>
-    </div>
-    <div class="i_car">
-    	<div class="car_t">购物车 [ <span>3</span> ]</div>
-        <div class="car_bg">
-            {if condition="(!empty($info))"}
-                <!--Begin 购物车已登录 Begin-->
-                <ul class="cars">
-                    <li>
-                        <div class="img"><a href="#"><img src="{$static}/images/car1.jpg" width="58" height="58" /></a></div>
-                        <div class="name"><a href="#">法颂浪漫梦境50ML 香水女士持久清新淡香 送2ML小样3只</a></div>
-                        <div class="price"><font color="#ff4e00">￥399</font> X1</div>
-                    </li>
-                    <li>
-                        <div class="img"><a href="#"><img src="{$static}/images/car2.jpg" width="58" height="58" /></a></div>
-                        <div class="name"><a href="#">香奈儿（Chanel）邂逅活力淡香水50ml</a></div>
-                        <div class="price"><font color="#ff4e00">￥399</font> X1</div>
-                    </li>
-                    <li>
-                        <div class="img"><a href="#"><img src="{$static}/images/car2.jpg" width="58" height="58" /></a></div>
-                        <div class="name"><a href="#">香奈儿（Chanel）邂逅活力淡香水50ml</a></div>
-                        <div class="price"><font color="#ff4e00">￥399</font> X1</div>
-                    </li>
-                </ul>
-                <div class="price_sum">共计&nbsp; <font color="#ff4e00">￥</font><span>1058</span></div>
-                <div class="price_a"><a href="#">去购物车结算</a></div>
-                <!--End 购物车已登录 End-->
-                {else /}
-                <!--Begin 购物车未登录 Begin-->
-                <div class="un_login">还未登录！<a href="Login.html" style="color:#ff4e00;">马上登录</a> 查看购物车！</div>
-                <!--End 购物车未登录 End-->
-            {/if}
-       		
-        </div>
-    </div>
-</div>
-<!--End Header End--> 
-<!--Begin Menu Begin-->
-<div class="menu_bg">
-	<div class="menu">
-    	<!--Begin 商品分类详情 Begin-->    
-    	<div class="nav">
-        	<div class="nav_t">全部商品分类</div>
-            <div class="leftNav">
-                <ul class="leftNavUl">
-                <?php 
-                    $count = 0;
-                ?>
-                {foreach name="up_type" item='ut'}
-                {php}$count++;{/php}
-                    <li>
-                        <div class="fj">
-                            <span class="n_img"><span></span><img src="{$static}/images/nav1.png" /></span>
-                            <span class="fl">{$ut.title}</span>
-                        </div>
 
-                        <div class="zj" style="top:-<?php echo ($count-1)*40;?>px;">
-                            <div class="zj_l">
-                                <div class="zj_l_c">
-                                    {foreach name="down_type" item='dt'}
-                                        {if condition="$dt['pid'] eq $ut['id']"}
-                                            {$dt.title}
-                                        {/if}
-                                    {/foreach}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                {/foreach}                  	
-                </ul>            
-            </div>
-        </div>  
-        <!--End 商品分类详情 End-->                                                     
-    	<ul class="menu_r">
-            <li><a href="{:url('Index/index')}">首页</a></li>
-            <li><a href="Food.html">美食</a></li>
-            <li><a href="Fresh.html">生鲜</a></li>
-            <li><a href="HomeDecoration.html">家居</a></li>
-            <li><a href="SuitDress.html">女装</a></li>
-            <li><a href="MakeUp.html">美妆</a></li>
-            <li><a href="Digital.html">数码</a></li>
-            <li><a href="GroupBuying.html">团购</a></li>
-        </ul>
-    </div>
-</div>
 <!--End Menu End--> 
 <div class="i_bg bg_color">
 	<div class="i_ban_bg">
@@ -351,16 +236,18 @@
                             html +=             '</div>';
                             html +=             '<div class="fresh_txt">';
                             html +=                 '<div class="fresh_txt_c">';
-                            html +=                     '<a href="#">进口水果</a><a href="#">奇异果</a><a href="#">西柚</a><a href="#">海鲜水产</a><a href="#">品质牛肉</a><a href="#">奶粉</a><a href="#">鲜活禽蛋</a><a href="#">进口酒</a><a href="#">进口奶粉</a><a href="#">鲜活禽蛋</a>';
+                            html +=                     '<a href="#">进口水果</a>';
                             html +=                 '</div>';
                             html +=             '</div>';
                             html +=         '</div>';
                             html +=         '<div class="fresh_mid">';
                             html +=             '<ul>';
                             for(var j in data){
+                                // var gid = ;
+                                var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
                                 if(data[j].gType == data_type[i].id){
                                     html +=             '<li>';
-                                    html +=                 '<div class="name"><a href="index.php/Goods/goodsDetail/gid/'+data[j].gid+'">'+data[j].gTitle+'</a></div>';
+                                    html +=                 '<div class="name"><a href="'+url+'">'+data[j].gTitle+'</a></div>';
                                     html +=                 '<div class="price">';
                                     html +=                     '<font>￥<span>'+data[j].gPrice+'</span></font></div>';
                                     html +=                 '<div class="img"><a href="#"><img src="'+data[j].thumb+'" width="185" height="155" /></a></div>'
