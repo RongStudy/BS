@@ -11,8 +11,8 @@ class GoodsType extends Model{
     /**
      * 获取商品类型
      */
-    public function getAll(){
-        return \think\Db::table($this->table)->select();
+    public function getAll($map = array()){
+        return \think\Db::table($this->table)->where($map)->select();
     }
     
 }
