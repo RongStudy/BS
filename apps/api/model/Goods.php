@@ -11,8 +11,8 @@ class Goods extends Model{
     /**
      * 获取所有商品
      */
-    public function getAll(){
-        return \think\Db::table($this->table)->select();
+    public function getAll($map = array()){
+        return \think\Db::table($this->table)->where($map)->select();
     }
     
 }
