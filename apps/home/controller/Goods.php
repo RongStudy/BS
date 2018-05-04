@@ -40,15 +40,23 @@ class Goods extends Base{
             $attachModel = model('Attach');
 
             // 获取商品信息
-            $goods_data = $goodsModel->getFind(array('gid'=>$gid));
-            $this->assign('goods_data', $goods_data);
+            $goods_data2 = $goodsModel->getFind(array('gid'=>$gid));
+            $this->assign('goods_data2', $goods_data2);
 
             // 获取商品对应的图片信息
-            $img_id = $goods_data['gImg'];
+            $img_id = $goods_data2['gImg'];
             $map['id'] = array('in', $img_id);
             $img_data  = $attachModel->getGoodsImg($map);
             $img_true_path  = photoPath($img_data, 2);          // 原图
             $img_thumb_path = photoPath($img_data, 1);          // 缩略图
+
+            $list = model('Cart')->getCart(array('uid'=>$this->uid, 'order_status'=>0));   // 获取购物车信息
+            $gid  = array_column($list, 'gid');  // 获取商品id
+            $gid  = implode(',', $gid);
+            $field = 'gid, gTitle, gUnit';
+            $goods_data = model('Goods')->getCartInfo(array('gid'=>array('in', $gid)), $field);
+            $this->assign('list', $list);
+            $this->assign('goods_data', $goods_data);
             
             $this->assign('img_path', $img_true_path);
             $this->assign('img_thumb_path', $img_thumb_path);
@@ -117,22 +125,30 @@ class Goods extends Base{
         }else{
             $list = $goodsModel->getSearch($map);
         }
-        
 
-        // 获取商品图片
-        $img = array_column($list, 'gImg');
-        $imgArr = array();
-        foreach ($img as $key => $value) {
-            $imgArr[] = explode(',', $img[$key])[0];
+        if($list){
+            foreach ($list as $key => $value) {
+                $tempImgId[] = explode(',', $value['gImg'])[0];
+                $list[$key]['imgId'] = explode(',', $value['gImg'])[0];
+            }
+            rsort($tempImgId);
+            $tempImgId2 = $tempImgId;
+            $tempImgId = implode(',', $tempImgId);
+            $goodsImg = model('Attach')->getGoodsImg(['id'=>['in', $tempImgId]]);
+            $img = photoPath($goodsImg ,1);
+            $img2 = array_combine($tempImgId2, $img);
+            foreach ($img2 as $key => $value) {
+                foreach ($list as $k => $v) {
+                    if($v['imgId'] == $key){
+                        $list[$k]['thumb'] = $value;
+                    }
+                }
+            }
         }
-        $imgArr = implode(',', $imgArr);
-        $img = model('Attach')->getGoodsImg(array('id'=>array('in', $imgArr)));
-        $img_thumb = photoPath($img);
-        
+
         $this->assign('list', $list);
         $this->assign('search', $search);
         $this->assign('type', $type);
-        $this->assign('img_thumb', $img_thumb);
         $this->assign('no_show_order', '1');
 
         return $this->fetch();
