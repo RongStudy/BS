@@ -12,7 +12,9 @@ class Index extends Controller{
 
     	$goods = model('Goods')->getAll();
     	$tempImg = [];
-    	$goods_type = model('GoodsType')->getAll(array('pid'=>'0'));
+        $goods_type = model('GoodsType')->getAll();
+        // print_r($goods_type);
+    	// $goods_type = model('GoodsType')->getAll(array('pid'=>array));
     	
         // 获取商品缩略图(每个商品一张)
         foreach ($goods as $key => $value) {
