@@ -25,7 +25,20 @@
             {if condition="(isset($search))"}
                 <span class="fl">名称：<font>{$search}</font></span>
             {else /}
-                <span class="fl">种类：<font>{$up_type[$type-1]['title']}</font></span>
+                <span class="fl">种类：
+                    <font>
+                        {foreach name="up_type" item="ut"}
+                            {if condition="($up_type[$key]['id'] eq $type)"}
+                                {$up_type[$key]['title']}
+                            {/if}
+                        {/foreach}
+                        {foreach name="down_type" item="dt"}
+                            {if condition="($down_type[$key]['id'] eq $type)"}
+                                {$down_type[$key]['title']}
+                            {/if}
+                        {/foreach}
+                    </font>
+                </span>
             {/if}
             
             <a href="{:url('Index/index')}"><img src="{$static}/images/s_close.gif" /></a>
@@ -61,10 +74,13 @@
             </div>
             <div class="list_c">
                 <ul class="cate_list">
+                    {if condition="(empty($list))"}
+                    暂时没有商品
+                    {else /}
                 	{foreach name="list" item="li"}
                         <li attr_gid = {$li.gid} class="toGoodsDetail">
                             <div class="img">
-                                <a href="#"><img src="{$img_thumb[$key]}" width="210" height="185" /></a>
+                                <a href="#"><img src="{$li.thumb}" width="210" height="185" /></a>
                             </div>
                             <div class="price">
                                 <font>￥<span>{$li.gPrice}</span></font>
@@ -72,6 +88,7 @@
                             <div class="name"><a href="#">{$li.gTitle}</a></div>
                         </li>   
                 	{/foreach}
+                    {/if}
                 </ul>
                 
                 <!-- <div class="pages">
