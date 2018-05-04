@@ -35,7 +35,7 @@
     	<span class="fl">全部 > 
     		{foreach name='up_type' item='ut'}
     			{php}
-    				if($ut['id'] == $goods_data['gType']){
+    				if($ut['id'] == $goods_data2['gType']){
 	    				echo $ut['title'];
 	    			}
     			{/php}
@@ -69,12 +69,12 @@
         
         <div class="pro_des">
         	<div class="des_name">
-        		<input type="hidden" name="sell_id" value="{$goods_data.uid}">
-            	<p>{$goods_data.gTitle}</p>
-                {$goods_data.gExplain}
+        		<input type="hidden" name="sell_id" value="{$goods_data2.uid}">
+            	<p>{$goods_data2.gTitle}</p>
+                {$goods_data2.gExplain}
             </div>
             <div class="des_price">
-            	本店价格：<b>{$goods_data.gPrice}</b>元<br />
+            	本店价格：<b>{$goods_data2.gPrice}</b>元<br />
                 <!-- 消费积分：<span>28R</span> -->
             </div>
             <!-- <div class="des_choice">
@@ -106,7 +106,7 @@
                 </div>
                 <!-- <span class="fl"><a onclick="ShowDiv_1('MyDiv1','fade1')"><img src="{$static}/images/j_car.png" /></a></span> -->
                 <span class="fl">
-                	<a id="addCart" onclick="addCart()" attr_id="{$goods_data.gid}"><img src="{$static}/images/j_car.png" /></a>
+                	<a id="addCart" onclick="addCart()" attr_id="{$goods_data2.gid}"><img src="{$static}/images/j_car.png" /></a>
                 </span>
             </div>            
         </div>    
@@ -152,17 +152,17 @@
                 <div class="des_con" id="p_attribute">
                 	<table border="0" align="center" style="width:100%; font-family:'宋体'; margin:10px auto;" cellspacing="0" cellpadding="0">
                       	<tr>
-                    		<td>商品名称：{$goods_data.gTitle}</td>
-                    		<td>商品编号：{$goods_data.gid}</td>
-                    		<td>上架时间：{$goods_data.addTime|date="Y-m-d H:i:s", ###}</td>
+                    		<td>商品名称：{$goods_data2.gTitle}</td>
+                    		<td>商品编号：{$goods_data2.gid}</td>
+                    		<td>上架时间：{$goods_data2.addTime|date="Y-m-d H:i:s", ###}</td>
                       	</tr>
                       	<tr>
-                    		<td>商品规格：{$goods_data.gFormat}</td>
-                    		<td>商品产地：{$goods_data.gArea}</td>
-                    		<td>商品库存：{$goods_data.gInvertory}件</td>
+                    		<td>商品规格：{$goods_data2.gFormat}</td>
+                    		<td>商品产地：{$goods_data2.gArea}</td>
+                    		<td>商品库存：{$goods_data2.gInvertory}件</td>
                       	</tr>
                       	<tr>
-                      		<td colspan="3">商品说明：{$goods_data.gExplain}</td>
+                      		<td colspan="3">商品说明：{$goods_data2.gExplain}</td>
                       	</tr>
                     </table>
                 </div>
