@@ -55,14 +55,14 @@
     </div>
     <!--Begin 热门商品 Begin-->
     <div class="content mar_10">
-    	<div class="h_l_img">
+    	<!-- <div class="h_l_img">
         	<div class="img"><img src="{$static}/images/l_img.jpg" width="188" height="188" /></div>
             <div class="pri_bg">
                 <span class="price fl">￥53.00</span>
                 <span class="fr">16R</span>
             </div>
-        </div>
-        <div class="hot_pro">        	
+        </div> -->
+        <!-- <div class="hot_pro">        	
         	<div id="featureContainer">
                 <div id="feature">
                     <div id="block">
@@ -143,7 +143,7 @@
                     <a class="h_next" href="javascript:void();">Next</a>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="content mar_20">
     	<img src="{$static}/images/mban_1.jpg" width="1200" height="110" />
@@ -220,44 +220,61 @@
                     var countFloor = 0;
                     var data      = ret.data.goods;
                     var data_type = ret.data.goods_type;
+                    // var moreUrl = '/Goods/searchList/type/';
+                    console.log(data_type);
                     if(ret.status == 1){
                         for(var i in data_type){
-                            countFloor+=1;
-                            html += '<div class="showFloor">';
-                            html +=     '<div class="i_t mar_10">';
-                            html +=         '<span class="floor_num">'+countFloor+'F</span>';
-                            html +=         '<span class="fl">'+ data_type[i].title +'</span>';
-                            html +=         '<span class="i_mores fr"><a href="#">更多</a></span>';
-                            html +=     '</div>';
-                            html +=     '<div class="content">';
-                            html +=         '<div class="fresh_left">';
-                            html +=             '<div class="fre_ban">';
-                            html +=                         '<a href="#"><img src="{$static}/images/fre_r.jpg" width="211" height="286" /></a>';
-                            html +=             '</div>';
-                            html +=             '<div class="fresh_txt">';
-                            html +=                 '<div class="fresh_txt_c">';
-                            html +=                     '<a href="#">进口水果</a>';
-                            html +=                 '</div>';
-                            html +=             '</div>';
-                            html +=         '</div>';
-                            html +=         '<div class="fresh_mid">';
-                            html +=             '<ul>';
-                            for(var j in data){
-                                // var gid = ;
-                                var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
-                                if(data[j].gType == data_type[i].id){
-                                    html +=             '<li>';
-                                    html +=                 '<div class="name"><a href="'+url+'">'+data[j].gTitle+'</a></div>';
-                                    html +=                 '<div class="price">';
-                                    html +=                     '<font>￥<span>'+data[j].gPrice+'</span></font></div>';
-                                    html +=                 '<div class="img"><a href="#"><img src="'+data[j].thumb+'" width="185" height="155" /></a></div>'
-                                    html +=             '</li>'
+                            if(data_type[i].pid == 0){
+                                countFloor+=1;
+                                html += '<div class="showFloor">';
+                                html +=     '<div class="i_t mar_10">';
+                                html +=         '<span class="floor_num">'+countFloor+'F</span>';
+                                html +=         '<span class="fl">'+ data_type[i].title +'</span>';
+                                html +=         '<span class="i_mores fr"><a href="/Goods/searchList/type/'+data_type[i].id+'">更多</a></span>';
+                                html +=     '</div>';
+                                html +=     '<div class="content">';
+                                html +=         '<div class="fresh_left">';
+                                html +=             '<div class="fre_ban">';
+                                html +=                         '<a href="#"><img src="{$static}/images/fre_r.jpg" width="211" height="286" /></a>';
+                                html +=             '</div>';
+                                html +=             '<div class="fresh_txt">';
+                                html +=                 '<div class="fresh_txt_c">';
+                                                        for(var k in data_type){
+                                                            if(data_type[k].pid == data_type[i].id){
+                                                                if(k<10){
+                                html +=                             '<a href="/Goods/searchList/type/'+data_type[k].id+'">'+data_type[k].title+'</a>';
+                                                                }else{
+                                                                    break;
+                                                                }
+                                
+                                                            }
+                                                        }
+
+
+
+                                
+                                html +=                 '</div>';
+                                html +=             '</div>';
+                                html +=         '</div>';
+                                html +=         '<div class="fresh_mid">';
+                                html +=             '<ul>';
+                                for(var j in data){
+                                    // var gid = ;
+                                    var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
+                                    if(data[j].gType == data_type[i].id){
+                                        html +=             '<li>';
+                                        html +=                 '<div class="name"><a href="'+url+'">'+data[j].gTitle+'</a></div>';
+                                        html +=                 '<div class="price">';
+                                        html +=                     '<font>￥<span>'+data[j].gPrice+'</span></font></div>';
+                                        html +=                 '<div class="img"><a href="#"><img src="'+data[j].thumb+'" width="185" height="155" /></a></div>'
+                                        html +=             '</li>'
+                                    }
                                 }
+                                html +=             '</ul>'
+                                html +=         '</div>';
+                                html +=     '</div>';
+                                html += '</div>';
                             }
-                            html +=             '</ul>'
-                            html +=         '</div>';
-                            html +=     '</div>';
-                            html += '</div>';
                         }
                     }
                     $('.floorContainer').append(html);
