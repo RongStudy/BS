@@ -104,7 +104,7 @@
                                 <div class="zj_l_c" style="color: red;">
                                     {foreach name="down_type" item='dt'}
                                         {if condition="$dt['pid'] eq $ut['id']"}
-                                            <a href="{:url('Goods/goodsList', ['type'=>$dt['id']])}">{$dt.title}</a>
+                                            <a href="{:url('Goods/searchList', ['type'=>$dt['id']])}">{$dt.title}</a>
                                         {/if}
                                     {/foreach}
                                 </div>
