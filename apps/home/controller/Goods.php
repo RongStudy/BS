@@ -227,7 +227,7 @@ class Goods extends Base{
             // 收货地址
             $addressList = model('Address')->where(['uid'=>$this->uid])->select();
             $this->assign('address',$addressList);
-            
+            $this->assign('no_show_order', '1');
             return $this->fetch();
         }
     }
