@@ -57,12 +57,13 @@ class Goods extends Base{
             $img = model('Attach')->getPhoto($map);
             $goodsImages = photoPath($img, 1);          // 获取缩略图
             $goodsImagesClarity = photoPath($img, 2);   // 获取大图
+            
             $this->assign('img', $goods['gImg']);
             $this->assign('goods', $goods);
             $this->assign('data', $goodsType);
+            $this->assign('edit', $goods['gid']);
             $this->assign('goodsImages', $goodsImages);
             $this->assign('goodsImagesClarity', $goodsImagesClarity);
-            $this->assign('edit', $goods['gid']);
             return $this->fetch('editGoods');
         }
     }
@@ -119,8 +120,18 @@ class Goods extends Base{
      * 删除商品
      * @return [type] [description]
      */
-    public function del(){
-        return $this->fetch();
+    public function delGoods(){
+        $gid = input('gid');
+        $map['gid'] = $gid;
+        if($gid){
+            if(model('Goods')->delGoods($map)){
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            }
+        }else{
+            $this->error('非法请求');
+        }
     }
 
     /**

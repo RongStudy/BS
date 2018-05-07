@@ -38,6 +38,21 @@ class Goods extends Model{
         $data = \think\Db::table($this->table)->where($where)->update($map);
         return $data;
     }
+
+    /**
+     * 停用启用商品
+     */
+    public function stopOrStart($gid, $status){
+        $list = \think\Db::table($this->table)->where(['gid'=>$id])->update($status);
+        return $list;
+    }
+
+    /**
+     * 删除商品
+     */
+    public function delGoods($map){
+        return \think\Db::table($this->table)->where($map)->delete();
+    }
     
 }
 

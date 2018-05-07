@@ -86,7 +86,8 @@
 	                <td class="td-manage">
 	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe631;</i>停用</a>
 	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe601;</i>启用</a>
-	                    <a href="{:url('Goods/editGoods',['gid'=>$vo['gid']])}" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
+                        <a href="{:url('Goods/editGoods',['gid'=>$vo['gid']])}" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
+	                    <a href="javascript:;" onclick="delGoods({$vo['gid']})" class="ml-5"><i class="Hui-iconfont">&#xe60b;</i>删除</a>
 	                </td>
 	            </tr>
 	            {php}$count++;{/php}
@@ -110,7 +111,7 @@ function stopOrStartMenu(ids, status){
         type: 'post',
         data: {ids: ids, status: status},
         dataType: 'json',
-        url: '{:url("Menu/stopOrStartMenu")}',
+        url: '{:url("Goods/stopOrStartMenu")}',
         success: function(ret){
             if(ret.code == 1){
                 layer.msg(ret.msg);
@@ -132,7 +133,7 @@ function stopOrStartMenu(ids, status){
 /**
  * 删除商品
  */
-function menuDel(ids, pids){
+function delGoods(gid){
     layer.confirm('确定要删除吗？', {
         icon: 7,
         title: '警告',
@@ -140,16 +141,14 @@ function menuDel(ids, pids){
     }, function(){
         $.ajax({
             type: 'post',
-            data: {ids: ids, pids:pids},
+            data: {gid:gid},
             dataType: 'json',
-            url: '{:url("Menu/menuDel")}',
+            url: '{:url("Goods/delGoods")}',
             success: function(ret){
                 if(ret.code == 1){
-                    layer.msg(ret.msg);
-                    setTimeout(function(){
+                    layer.msg(ret.msg, {time:2000}, function(){
                         location.reload();
-                    },1000);
-                    // location.reload();
+                    });
                 }else{
                     layer.msg(ret.msg);
                     return false;
