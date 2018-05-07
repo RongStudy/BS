@@ -2,6 +2,11 @@
 namespace app\home\controller;
 
 class Address extends Base{
+     public function init(){
+        if(!empty(session('home'))){
+            $this->assign('info', session('home.user_auth'));
+        }
+    }
 
     /**
      * 增加收货地址
@@ -12,7 +17,7 @@ class Address extends Base{
             $data['uid'] = $this->uid;
             $data['addtime'] = time();
             if(model('Address')->insert($data)){
-                $this->success('添加成功');
+                $this->success('添加收货地址成功');
             }else{
                 $this->error('添加收货地址失败');
             }
@@ -26,19 +31,14 @@ class Address extends Base{
      * @return [type] [description]
      */
     public function myAddress(){
-        if(request()->isPost()){
-
-        }else{
-            $type = goods_type();
-            $this->assign('up_type', $type['up_type']);
-            $this->assign('down_type', $type['down_type']);
-            $this->assign('no_show_order', '1');
-
-
-            $addressData = model('Address')->getAddress(array('uid'=>$this->uid));
-            $this->assign('addressData', $addressData);
-            return $this->fetch();
-        }
+        $this->init();
+        $type = goods_type();
+        $this->assign('up_type', $type['up_type']);
+        $this->assign('down_type', $type['down_type']);
+        $this->assign('no_show_order', '1');
+        $addressData = model('Address')->getAddress(array('uid'=>$this->uid));
+        $this->assign('addressData', $addressData);
+        return $this->fetch();
     }
 
     /**

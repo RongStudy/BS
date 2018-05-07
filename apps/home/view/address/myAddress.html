@@ -116,16 +116,19 @@
          * 删除收货地址
          */
         function delAddress(address_id){
-            $.post('{:url("Address/delAddress")}', {'id': address_id}, function(ret){
-                if(ret.code == 1){
-                    layer.msg(ret.msg, {time:1500, icon:1},function(){
-                        location.reload();
-                    })
-                }else{
-                    layer.msg(ret.msg, {time:1500, icon:2});
-                    return false;
-                }
-            }, 'json');
+            layer.confirm('删除这个收货地址?', function(index){
+                $.post('{:url("Address/delAddress")}', {'id': address_id}, function(ret){
+                    if(ret.code == 1){
+                        layer.msg(ret.msg, {time:1500, icon:1},function(){
+                            location.reload();
+                        })
+                    }else{
+                        layer.msg(ret.msg, {time:1500, icon:2});
+                        return false;
+                    }
+                }, 'json');
+            });
+            layer.close(index);
         }
 
         /**
