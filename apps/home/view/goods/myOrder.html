@@ -52,21 +52,27 @@
                     <td>{$order.addtime|date="Y-m-d H:i:s", ###}</td>
                     <td>￥{$order.all_price}</td>
                     <td>
-                        {eq name="order.pay_status" value="0"}待支付
+                        {eq name="order.send_status" value="3"}已取消
                         {else /}
-                            {$send_status[$order['send_status']]}
+                            {eq name="order.pay_status" value="0"}待支付
+                            {else /}
+                                {$send_status[$order['send_status']]}
+                            {/eq}
                         {/eq}
                     </td>
                     <td>
-                        {eq name="order.pay_status" value="0"}
-                        <a href="{:url('Goods/sureOrder', ['id'=>$order['id']])}">去支付</a>
-                        <a href="javascript:;" onclick="cancelOrder({$order.id})">取消订单</a>
+                        {eq name="order.send_status" value="3"}
                         {else /}
-                            {eq name="order.send_status" value = '1'}
-                            <a href="javascript:;" style="color: red;" class="confirm" attr_orderId = '{$order.id}'>确认收货</a>
+                            {eq name="order.pay_status" value="0"}
+                            <a href="{:url('Goods/sureOrder', ['id'=>$order['id']])}">去支付</a>
+                            <a href="javascript:;" onclick="cancelOrder({$order.id})">取消订单</a>
                             {else /}
-                                {eq name="order.send_status" value = '0'}请耐心等待
+                                {eq name="order.send_status" value = '1'}
+                                <a href="javascript:;" style="color: red;" class="confirm" attr_orderId = '{$order.id}'>确认收货</a>
                                 {else /}
+                                    {eq name="order.send_status" value = '0'}请耐心等待
+                                    {else /}
+                                    {/eq}
                                 {/eq}
                             {/eq}
                         {/eq}

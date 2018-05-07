@@ -228,6 +228,7 @@ class Goods extends Base{
         if($res['code'] == 0){
             $this->error('addInvertory出错');
         }else{
+            model('Order')->updateOrder($map, array('send_status'=>3));
             $this->success('取消订单成功');
         }
     }
