@@ -56,7 +56,7 @@
                 <th width="90">商品单位</th>
                 <th width="150">商品价格</th>
                 <!-- <th width="130">商品图片</th> -->
-                <!-- th width="100">是否已启用</th> -->
+                <th width="100">状态</th>
                 <th width="100">操作</th>
             </tr>
         </thead>
@@ -83,9 +83,18 @@
                     </td>
                     <td>{$vo.gUnit}</td>
 	                <td>{$vo.gPrice}</td>
+                    <td>
+                        {eq name="vo.is_sell" value="1"}在售
+                        {else}停售
+                        {/eq}
+                    </td>
 	                <td class="td-manage">
-	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe631;</i>停用</a>
-	                    <a onclick="stopOrStartMenu()"><i class="Hui-iconfont">&#xe601;</i>启用</a>
+                        {eq name="vo.is_sell" value="1"}
+	                       <a onclick="stopOrStartGoods({$vo.gid}, {$vo.is_sell})"><i class="Hui-iconfont">&#xe631;</i>下架</a>
+                           {else /}
+                           <a onclick="stopOrStartGoods({$vo.gid}, {$vo.is_sell})"><i class="Hui-iconfont">&#xe601;</i>上架</a>
+                        {/eq}
+	                    
                         <a href="{:url('Goods/editGoods',['gid'=>$vo['gid']])}" class="ml-5"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
 	                    <a href="javascript:;" onclick="delGoods({$vo['gid']})" class="ml-5"><i class="Hui-iconfont">&#xe60b;</i>删除</a>
 	                </td>
@@ -106,19 +115,17 @@
 /**
  * 停用启用商品
  */
-function stopOrStartMenu(ids, status){
+function stopOrStartGoods(gid, is_sell){
     $.ajax({
         type: 'post',
-        data: {ids: ids, status: status},
+        data: {gid: gid, is_sell: is_sell},
         dataType: 'json',
-        url: '{:url("Goods/stopOrStartMenu")}',
+        url: '{:url("Goods/stopOrStartGoods")}',
         success: function(ret){
             if(ret.code == 1){
-                layer.msg(ret.msg);
-                setTimeout(function(){
+                layer.msg(ret.msg, {time:1500}, function(){
                     location.reload();
-                },1000);
-                // location.reload();
+                });
             }else{
                 layer.msg(ret.msg);
                 return false;

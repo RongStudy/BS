@@ -141,7 +141,7 @@ class Goods extends Base{
         // 获取商品
         $map = array();
         $searchData = array();
-        $field = 'gid,gTitle,gType,gUnit,gPrice';
+        $field = 'gid,gTitle,gType,gUnit,gPrice, is_sell';
         $title = input('gName');
         if($title){
             $searchData['title'] = $title;
@@ -186,10 +186,31 @@ class Goods extends Base{
     }
 
     /**
+     * 上架下架商品
+     */
+    public function stopOrStartGoods(){
+        $sell_info = '';
+        $gid = input('gid');
+        $is_sell = input('is_sell');
+        if($is_sell == '' || !$gid){
+            $this->error('参数错误');
+            exit();
+        }
+        $is_sell = ($is_sell == 1) ? 0 : 1;
+        $sell_info = ($is_sell == 1) ? '上架' : '下架';
+        $where['gid'] = $gid;
+        $map['is_sell'] = $is_sell;
+        if(model('Goods')->stopOrStartGoods($where, $map)){
+            $this->success($sell_info.'成功');
+        }else{
+            $this->error($sell_info.'失败');
+        }
+    }
+
+    /**
      * 商品种类
      * 
      */
-    
     // 1.商品种类列表
     public function listGoodsType(){
         $map = array();

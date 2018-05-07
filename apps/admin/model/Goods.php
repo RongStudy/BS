@@ -42,8 +42,8 @@ class Goods extends Model{
     /**
      * 停用启用商品
      */
-    public function stopOrStart($gid, $status){
-        $list = \think\Db::table($this->table)->where(['gid'=>$id])->update($status);
+    public function stopOrStartGoods($where, $map){
+        $list = \think\Db::table($this->table)->where($where)->update($map);
         return $list;
     }
 
