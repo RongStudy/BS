@@ -249,17 +249,15 @@
                                 
                                                             }
                                                         }
-
-
-
-                                
                                 html +=                 '</div>';
                                 html +=             '</div>';
                                 html +=         '</div>';
                                 html +=         '<div class="fresh_mid">';
                                 html +=             '<ul>';
                                 for(var j in data){
-                                    // var gid = ;
+                                    if(j>5){
+                                        break;
+                                    }
                                     var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
                                     if(data[j].gType == data_type[i].id){
                                         html +=             '<li>';
