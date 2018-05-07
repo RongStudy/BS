@@ -131,16 +131,14 @@ class Goods extends Base{
                 $tempImgId[] = explode(',', $value['gImg'])[0];
                 $list[$key]['imgId'] = explode(',', $value['gImg'])[0];
             }
-            rsort($tempImgId);
-            $tempImgId2 = $tempImgId;
             $tempImgId = implode(',', $tempImgId);
             $goodsImg = model('Attach')->getGoodsImg(['id'=>['in', $tempImgId]]);
-            $img = photoPath($goodsImg ,1);
-            $img2 = array_combine($tempImgId2, $img);
-            foreach ($img2 as $key => $value) {
-                foreach ($list as $k => $v) {
-                    if($v['imgId'] == $key){
-                        $list[$k]['thumb'] = $value;
+            $img = photoPath2($goodsImg ,1);
+
+            foreach ($list as $key => $value) {
+                foreach ($img as $k => $v) {
+                    if($v['img_id'] == $value['imgId']){
+                        $list[$key]['thumb'] = $v['thumb_p'];
                     }
                 }
             }
