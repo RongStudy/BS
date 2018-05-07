@@ -53,7 +53,7 @@ class Goods extends Base{
             $list = model('Cart')->getCart(array('uid'=>$this->uid, 'order_status'=>0));   // 获取购物车信息
             $gid  = array_column($list, 'gid');  // 获取商品id
             $gid  = implode(',', $gid);
-            $field = 'gid, gTitle, gUnit';
+            $field = 'gid, gTitle, gUnit, gInvertory';
             $goods_data = model('Goods')->getCartInfo(array('gid'=>array('in', $gid)), $field);
             $this->assign('list', $list);
             $this->assign('goods_data', $goods_data);
@@ -161,11 +161,89 @@ class Goods extends Base{
     }
 
     /**
+     * [subInvertory 减库存]
+     * @param  [array] $gid   [商品id]
+     * @param  [array] $count [商品数量]
+     * @return [array]        [description]
+     */
+    public function subInvertory($gid, $count){
+        $bool = true;
+        $return = array('code'=>1, 'msg'=>'所有数据减库存成功');
+        $gid = explode(',', $gid);
+        $count = explode(',', $count);
+        foreach ($gid as $kg => $vg) {
+            $where['gid'] = $vg;
+            $hasInvertory = model('Goods')->where($where)->column('gInvertory');
+            $gInvertory = $hasInvertory[0]-$count[$kg];
+            if(!(model('Goods')->updateInvertory($where, $gInvertory))){
+                $bool = false;
+            }
+            if(!$bool){
+                $return['code'] = 0;
+                $return['msg'] = $vg . '库存没有减成功';
+                return $return;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * [subInvertory 加库存]
+     * @param  [array] $gid   [商品id]
+     * @param  [array] $count [商品数量]
+     * @return [array]        [description]
+     */
+    public function addInvertory($gid, $count){
+        $bool = true;
+        $return = array('code'=>1, 'msg'=>'所有数据加库存成功');
+        $gid = explode(',', $gid);
+        $count = explode(',', $count);
+        foreach ($gid as $kg => $vg) {
+            $where['gid'] = $vg;
+            $hasInvertory = model('Goods')->where($where)->column('gInvertory');
+            $gInvertory = $hasInvertory[0]+$count[$kg];
+            if(!(model('Goods')->updateInvertory($where, $gInvertory))){
+                $bool = false;
+            }
+            if(!$bool){
+                $return['code'] = 0;
+                $return['msg'] = $vg . '库存没有加成功';
+                return $return;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * [cancelOrder 取消订单]
+     * @return [json] [description]
+     */
+    public function cancelOrder(){
+        $oId = input('id');
+        $map['id'] = $oId;
+        $data = model('Order')->getOrder2($map);
+        $gid = $data['gid'];
+        $count = $data['count'];
+        $res = $this->addInvertory($gid, $count);
+        if($res['code'] == 0){
+            $this->error('addInvertory出错');
+        }else{
+            $this->success('取消订单成功');
+        }
+    }
+
+    /**
      * [payment 生成订单]
-     * @return [type] [description]
+     * @return [json] [description]
      */
     public function payment(){
         $data = input('');
+        $gid = $data['gid'];
+        $count = $data['count'];
+        $res = $this->subInvertory($gid, $count);
+        if($res['code'] == 0){
+            $this->error('subInvertory出错');
+        }
         $cart_id = $data['cart_id'];
         unset($data['cart_id']);
         if($data){
@@ -184,6 +262,10 @@ class Goods extends Base{
         }
     }
 
+    /**
+     * [sureOrder 确认订单]
+     * @return [json] [description]
+     */
     public function sureOrder(){
         if(request()->isPost()){
             $order_id  = input('order_id');
@@ -197,10 +279,15 @@ class Goods extends Base{
             }
         }else{
             $this->init();
-
-            // 最新生成的订单
-            $orderMap['uid'] = $this->uid;
-            $orderData = model('Order')->getOrder($orderMap, 'id desc');
+            $oId = input('id');
+            if($oId){
+                // 最新生成的订单
+                $orderMap['uid'] = $this->uid;
+                $orderData = model('Order')->getOrder($orderMap, 'id desc');
+            }else{
+                $map['id'] = $oId;
+                $orderData = model('Order')->getOrder2($map);
+            }
 
             $gid = $orderData['gid']; // 商品id
             $count = $orderData['count']; //商品数量
@@ -261,7 +348,7 @@ class Goods extends Base{
         if(request()->isPost()){
             $order_id = input('order_id');
             if(model('Order')->where(array('id'=>$order_id))->update(array('send_status'=>2))!==false){
-                $this->success('收获成功');
+                $this->success('收货成功');
             }else{
                 $this->error('系统出错，请重试');
             }

@@ -22,6 +22,9 @@ class Order extends Model{
     public function getOrder($map, $order='id desc'){
         return \think\Db::table($this->table)->where($map)->order($order)->find();
     }
+    public function getOrder2($map){
+        return \think\Db::table($this->table)->where($map)->find();
+    }
 
     public function getOrderPage($map, $order='id desc'){
         return \think\Db::table($this->table)->where($map)->order($order)->paginate(10);

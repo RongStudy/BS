@@ -51,15 +51,26 @@
                     <td><font color="#ff4e00">{$order.order_sn}</font></td>
                     <td>{$order.addtime|date="Y-m-d H:i:s", ###}</td>
                     <td>￥{$order.all_price}</td>
-                    <td>{$send_status[$order['send_status']]}</td>
                     <td>
-                        {eq name="order.send_status" value = '1'}
-                        <a href="javascript:;" style="color: red;" class="confirm" attr_orderId = '{$order.id}'>确认收货</a>
+                        {eq name="order.pay_status" value="0"}待支付
                         {else /}
-                            {eq name="order.send_status" value = '0'}请耐心等待
+                            {$send_status[$order['send_status']]}
+                        {/eq}
+                    </td>
+                    <td>
+                        {eq name="order.pay_status" value="0"}
+                        <a href="{:url('Goods/sureOrder', ['id'=>$order['id']])}">去支付</a>
+                        <a href="javascript:;" onclick="cancelOrder({$order.id})">取消订单</a>
+                        {else /}
+                            {eq name="order.send_status" value = '1'}
+                            <a href="javascript:;" style="color: red;" class="confirm" attr_orderId = '{$order.id}'>确认收货</a>
                             {else /}
+                                {eq name="order.send_status" value = '0'}请耐心等待
+                                {else /}
+                                {/eq}
                             {/eq}
                         {/eq}
+                        
                     </td>
                 </tr>
                 {/foreach}
@@ -84,6 +95,20 @@
                 }
             }, 'json');
         });
+
+        // 取消订单
+        function cancelOrder(oid){
+            $.post('{:url("Goods/cancelOrder")}', {"id": oid}, function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg, {time:1500}, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(ret.msg, {time:1500});
+                    return false;
+                }
+            }, 'json');
+        }
     </script>
 {include file='base/footer' /}
 {/block}

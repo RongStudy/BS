@@ -37,6 +37,11 @@ class Goods extends Model{
     public function getSearchOrder($order, $map, $field = '*'){
         return \think\Db::table($this->table)->field($field)->where($map)->order($order)->select();
     }
+
+    // 更新库存
+    public function updateInvertory($where, $gInvertory){
+        return \think\Db::table($this->table)->where($where)->update(['gInvertory'=>$gInvertory]);
+    }
 }
 
 
