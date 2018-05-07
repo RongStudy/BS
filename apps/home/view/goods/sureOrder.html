@@ -16,6 +16,9 @@
     .fr{
         font-size: 12px;
     }
+    .addres{
+        height: 30px;
+    }
 </style>
 
 <div class="i_bg">  
@@ -77,7 +80,14 @@
                         </span>
                         收货人信息
                     </div>
-                    {foreach name='address' item='location'}
+                    <div class="two_t">
+                        <select name="addres" class="addres">
+                        {foreach name='address' item='location'}
+                        <option value="{$location.id}" name="addressId">{$location.name}+{$location.phone}+{$location.address}+{$location.postalcode}</option>
+                        {/foreach}
+                        </select>
+                    </div>
+                    <!-- {foreach name='address' item='location'}
                         <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
                             <tr>
                                 <input type="hidden" name="addressId" value="{$location.id}">
@@ -93,10 +103,24 @@
                                 <td>{$location.postalcode}</td>
                             </tr>
                         </table>
-                    {/foreach}
+                    {/foreach} -->
+                    <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <input type="hidden" name="addressId" value="{$location.id}">
+                            <td class="p_td" width="160">收件人名称</td>
+                            <td width="395" class="ad_name"></td>
+                            <td class="p_td" width="160">手机号码</td>
+                            <td width="395" class="ad_phone"></td>
+                        </tr>
+                        <tr>
+                            <td class="p_td">详细地址</td>
+                            <td class="ad_address"></td>
+                            <td class="p_td">邮政编码</td>
+                            <td class="ad_postalcode"></td>
+                        </tr>
+                    </table>
                 {/if}
             </div>
-            
             
             <div class="two_t">
                 支付方式
@@ -133,25 +157,42 @@
     <!--End 第二步：确认订单信息 End-->
     <script src="__PUBLIC__/plugins/layer/layer.js"></script>
     <script>
+        // 选择收货地址
+        function selectAddress(){
+            var address = $('.addres').find('option:selected').text();
+            address = address.split('+');
+            $('.ad_name').text(address[0]);
+            $('.ad_phone').text(address[1]);
+            $('.ad_address').text(address[2]);
+            $('.ad_postalcode').text(address[3]);
+        }
+        $(function(){
+            selectAddress();
+        });
+        $('.addres').change(function(){
+            selectAddress();
+        });
 
+        // 选择支付方式
         $('.pay li').click(function(){
             $('.pay li').removeClass('checked');
             $(this).addClass('checked');
             $('input[name="pay_name"]').val($(this).attr('attr_payName'));
         });
 
+        // 提交
         $('.sub').click(function(){
             var pay_name = $('#pay_name').val();
             if(pay_name == ''){
                 layer.msg('请选择支付方式', {time: 1500});
                 return false;
             }
-            var message = $('#message').val();
-            var order_id = $('input[name="order_id"]').val();
-
+            var message = $('#message').val();  // 订单附言
+            var address_id = $('.addres').val(); //  收货地址id
+            var order_id = $('input[name="order_id"]').val(); // 订单id
             $.post(
                 '{:url("Goods/sureOrder")}', 
-                {'pay_name': pay_name, 'message': message, 'order_id':order_id}, 
+                {'pay_name': pay_name, 'message': message, 'order_id':order_id, 'address_id': address_id}, 
                 function(ret){
                     if(ret.code == 1){
                         layer.msg(ret.msg, {time:1500}, function(){
@@ -165,11 +206,7 @@
             'json');           
         });
 
-        /**
-         * 添加收货地址
-         * @param  {[type]} ){                         var $ [description]
-         * @return {[type]}     [description]
-         */
+        // 添加收货地址
         $('.addAddress').click(function(){
             layer.open({
                 type: 2,

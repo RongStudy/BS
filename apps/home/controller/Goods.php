@@ -273,6 +273,7 @@ class Goods extends Base{
             $map['pay_name'] = input('pay_name');
             $map['message']  = input('message');
             $map['pay_status']  = '1';
+            $map['address_id']  = input('address_id');
             if(model('Order')->where(array('id'=>$order_id))->update($map)!==false){
                 $this->success('付款成功');
             }else{
@@ -335,8 +336,9 @@ class Goods extends Base{
 
         $orderMap['uid'] = $this->uid;
         $orderData = model('Order')->getOrder($orderMap, 'id desc');
-        $pay_name  = array('余额支付','货到付款','支付宝');
-
+        $pay_name  = array('1'=>'余额支付','货到付款','支付宝');
+        
+        $this->assign('no_show_order', '1');
         $this->assign('pay_name', $pay_name);
         $this->assign('orderData', $orderData);
         return $this->fetch();
@@ -359,7 +361,6 @@ class Goods extends Base{
             $orderData = model('Order')->getOrderPage(array('uid'=>$this->uid));
             $pay_name = ['余额支付', '货到付款', '支付宝']; // 支付方式
             $send_status= ['待发货', '已发货', '已收货'];  // 发货状态
-
             $this->assign('pay_name', $pay_name);
             $this->assign('orderData', $orderData);
             $this->assign('send_status', $send_status);
