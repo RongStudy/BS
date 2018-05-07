@@ -38,12 +38,12 @@
     			{foreach name="list" item='data'}
 	    			<tr>
 		    			<td>
-		    				<input type="hidden" name="gid" value="{$goods_data[$key]['gid']}">
+		    				<input type="hidden" name="gid" value="{$data.gid}">
 		    				<input type="hidden" name="cart_id" value="{$data['id']}">
 		    				<div class="c_s_img"><img src="{$data.thumb}" width="73" height="73" /></div>
-		    				{$goods_data[$key]['gTitle']}
+		    				{$data.gTitle}
 		    			</td>
-		    			<td align="center">{$goods_data[$key]['gUnit']}</td>
+		    			<td align="center">{$data.gUnit}</td>
 		    			<td align="center">
 		    				<div class="c_num">
 		    					<input type="button" value="" onclick="jianUpdate1(jq(this));" class="car_btn_1" />
@@ -64,7 +64,7 @@
 	    			<td colspan="6" style="font-family:'Microsoft YaHei'; border-bottom:0;">
 	    				<label class="r_rad"></label>
 	    				<span class="fr">商品总价：
-	    					<b style="font-size:22px; color:#ff4e00;">￥<span class="all_price">2899</span></b>
+	    					<b style="font-size:22px; color:#ff4e00;">￥<span class="all_price2">2899</span></b>
 	    				</span>
 	    			</td>
 	    		</tr>
@@ -129,11 +129,11 @@
     	 * @return {[type]} [description]
     	 */
     	function allPrice(){
-    		var all_price = 0;
+    		var all_price2 = 0;
     		$('.total_price').each(function(){
-    			all_price += Number($(this).text());
+    			all_price2 += Number($(this).text());
     		});
-    		$('.all_price').text(all_price);
+    		$('.all_price2').text(all_price2);
     	}
     	// 减数量
     	$('.car_btn_1').click(function(){
@@ -160,7 +160,7 @@
     		var cart_id = '';
     		var one_price = '';
     		var total_price = '';
-    		var all_price = '';
+    		var all_price2 = '';
 
     		// 订单id
     		$('input[name="cart_id"]').each(function(){
@@ -193,9 +193,9 @@
     		total_price = total_price.substring(1);
 
     		// 总共付款钱数
-    		all_price = $('.all_price').text();
+    		all_price2 = $('.all_price2').text();
 
-    		obj = 'cart_id='+cart_id+'&gid='+gid+'&count='+count+'&one_price='+one_price+'&total_price='+total_price+'&all_price='+all_price;
+    		obj = 'cart_id='+cart_id+'&gid='+gid+'&count='+count+'&one_price='+one_price+'&total_price='+total_price+'&all_price='+all_price2;
 
     		$.post('{:url("Goods/payment")}', obj, function(ret){
     			if(ret.code == 1){

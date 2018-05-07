@@ -92,6 +92,14 @@ class Goods extends Base{
         $field = 'gid, gTitle, gUnit';
 
         $goods_data = model('Goods')->getCartInfo(array('gid'=>array('in', $gid)), $field);
+        foreach ($list as $key => $value) {
+            foreach ($goods_data as $k => $v) {
+                if($v['gid'] == $value['gid']){
+                    $list[$key]['gTitle'] = $v['gTitle'];
+                    $list[$key]['gUnit'] = $v['gUnit'];
+                }
+            }
+        }
         $this->assign('list', $list);
         $this->assign('goods_data', $goods_data);
         return $this->fetch('cart');
