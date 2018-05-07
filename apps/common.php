@@ -99,6 +99,22 @@ function photoPath($data, $type = 1){
     return $imgPath;
 }
 
+function photoPath2($data, $type = 1){
+    $imgPath = [];
+    if($type == 1){
+        foreach ($data as $key => $value) {
+            $imgPath[$key]['img_id'] = $value['id'];
+            $imgPath[$key]['thumb_p'] = config('url_domain').'/public/uploads/'.$value['thumb_path'].'/'.$value['thumb_name'];
+        }
+    }else{
+        foreach ($data as $key => $value) {
+            $imgPath['img_id'][] = $value['id'];
+            $imgPath['thumb_p'][] = config('url_domain').'/public/uploads/'.$value['save_path'].'/'.$value['name'];
+        }
+    }
+    return $imgPath;
+}
+
 /**
  * [make_random 生成随机字符]
  * @param  integer $length     [生成的长度]
