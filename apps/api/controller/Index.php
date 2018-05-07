@@ -21,16 +21,15 @@ class Index extends Controller{
     		$tempImgId[] = explode(',', $value['gImg'])[0];
             $goods[$key]['imgId'] = explode(',', $value['gImg'])[0];
     	}
-        rsort($tempImgId);
         $tempImgId2 = $tempImgId;
     	$tempImgId = implode(',', $tempImgId);
     	$goodsImg = model('Attach')->getPhoto(['id'=>['in', $tempImgId]]);
-    	$img = photoPath($goodsImg ,1);
-        $img2 = array_combine($tempImgId2, $img);
-        foreach ($img2 as $key => $value) {
-            foreach ($goods as $k => $v) {
-                if($v['imgId'] == $key){
-                    $goods[$k]['thumb'] = $value;
+    	$img = photoPath2($goodsImg ,1);
+
+        foreach ($goods as $key => $value) {
+            foreach ($img as $k => $v) {
+                if($v['img_id'] == $value['imgId']){
+                    $goods[$key]['thumb'] = $v['thumb_p'];
                 }
             }
         }
