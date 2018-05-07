@@ -37,12 +37,20 @@ class Goods extends Base{
      * 编辑商品
      */
     public function editGoods(){
-        $gid = input('gid');
         if(request()->isPost()){
+            $where['gid'] = input('gid');
             $map = input();
-            dump($map);
-            die;
+            unset($map['gid']);
+            if($map['gImg'] == ''){
+                unset($map['gImg']);
+            }
+            if(model('Goods')->editGoods($where, $map)!==false){
+                $this->success('修改成功');
+            }else{
+                $this->error('修改失败');
+            }
         }else{
+            $gid = input('gid');
             $goods = model('Goods')->getOne(array('gid'=>$gid));
             $goodsType = model('GoodsType')->getType($this->uid, '', array(), 'id, title');
             $map['id'] = array('in', $goods['gImg']);
@@ -55,7 +63,7 @@ class Goods extends Base{
             $this->assign('goodsImages', $goodsImages);
             $this->assign('goodsImagesClarity', $goodsImagesClarity);
             $this->assign('edit', $goods['gid']);
-            return $this->fetch('addGoods');
+            return $this->fetch('editGoods');
         }
     }
 

@@ -30,6 +30,14 @@ class Goods extends Model{
     public function getOne($map){
         return \think\Db::table($this->table)->find($map);
     }
+
+    /**
+     * 修改商品
+     */
+    public function editGoods($where, $map){
+        $data = \think\Db::table($this->table)->where($where)->update($map);
+        return $data;
+    }
     
 }
 
