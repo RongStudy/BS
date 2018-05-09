@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace app\home\controller;
 
 class Goods extends Base{
@@ -57,7 +57,7 @@ class Goods extends Base{
             $goods_data = model('Goods')->getCartInfo(array('gid'=>array('in', $gid)), $field);
             $this->assign('list', $list);
             $this->assign('goods_data', $goods_data);
-            
+
             $this->assign('img_path', $img_true_path);
             $this->assign('img_thumb_path', $img_thumb_path);
         }else{
@@ -128,6 +128,7 @@ class Goods extends Base{
         }else if($type!=''){
             $map['gType'] = array('eq', $type);
         }
+        $map['is_sell'] = 1;
         if($order){
             $list = $goodsModel->getSearchOrder($order, $map);
         }else{
@@ -297,7 +298,7 @@ class Goods extends Base{
             $all_price = $orderData['all_price']; //商品总计
 
             $goodsList = model('Goods')->getSearch(array('gid'=>array('in', $gid)), 'gTitle, gUnit, gImg');
-            
+
             $goodsImg = array();
             foreach ($goodsList as $key => $value) {
                 $goodsImg[] = explode(',', $value['gImg'])[0];
@@ -337,7 +338,7 @@ class Goods extends Base{
         $orderMap['uid'] = $this->uid;
         $orderData = model('Order')->getOrder($orderMap, 'id desc');
         $pay_name  = array('1'=>'余额支付','货到付款','支付宝');
-        
+
         $this->assign('no_show_order', '1');
         $this->assign('pay_name', $pay_name);
         $this->assign('orderData', $orderData);
@@ -364,7 +365,7 @@ class Goods extends Base{
             $this->assign('pay_name', $pay_name);
             $this->assign('orderData', $orderData);
             $this->assign('send_status', $send_status);
-            
+
             $this->assign('no_show_order', '1');
             return $this->fetch();
         }

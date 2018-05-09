@@ -9,13 +9,13 @@ class Index extends Controller{
      * @return [type] [description]
      */
     public function getFloor(){
-
-    	$goods = model('Goods')->getAll();
+        $getMap['is_sell'] = 1;
+    	$goods = model('Goods')->getAll($getMap);
     	$tempImg = [];
         $goods_type = model('GoodsType')->getAll();
         // print_r($goods_type);
     	// $goods_type = model('GoodsType')->getAll(array('pid'=>array));
-    	
+
         // 获取商品缩略图(每个商品一张)
         foreach ($goods as $key => $value) {
     		$tempImgId[] = explode(',', $value['gImg'])[0];
@@ -43,7 +43,7 @@ class Index extends Controller{
     public function getType(){
         $goodsTypeModel = model('GoodsType');
         $list = $goodsTypeModel->getAll();
-        
+
         $up_type = array();
         $down_type = array();
         foreach ($list as $key => $value) {
