@@ -7,7 +7,7 @@
 </style>
 {include file='base/top' /}
 
-<!--End Header End--> 
+<!--End Header End-->
 <div class="i_bg bg_color">
     <!--Begin 用户中心 Begin -->
     <div class="m_content">
@@ -38,7 +38,12 @@
         <div class="m_right">
             <p></p>
             <div class="mem_tit">收货地址</div>
-            
+            {if condition="(empty($addressData))"}
+            <div class="address">
+                暂无收货地址
+                <a href="javascript:;" class="addAddress fr" style="color:#ff4e00;">新增</a>
+            </div>
+            {else /}
                 {foreach name="addressData" item="address"}
                 <div class="address">
                     <div class="a_close">
@@ -72,44 +77,45 @@
                         </tr>
                     </table>
                     <p align="right">
-                        <a href="javascript:;" class="editAddress" attr_id="{$address.id}" style="color:#ff4e00;">编辑</a>&nbsp; &nbsp; &nbsp; &nbsp; 
+                        <a href="javascript:;" class="editAddress" attr_id="{$address.id}" style="color:#ff4e00;">编辑</a>&nbsp; &nbsp; &nbsp; &nbsp;
                         <a href="javascript:;" class="addAddress" style="color:#ff4e00;">新增</a>
                     </p>
                 </div>
                 {/foreach}
-            <div class="mem_tit">
-                收货地址修改
-            </div>
-            <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
-                <tr>
-                    <td align="right">收货人姓名：</td>
-                    <td style="font-family:'宋体';">
-                        <input type="hidden" value="" class="hidden_id">
-                        <input type="text" name="name" value="" class="add_ipt" />（必填）
-                    </td>
-                    <td align="right">手机号码：</td>
-                    <td style="font-family:'宋体';">
-                        <input type="text" name="phone" value="" class="add_ipt" />（必填）
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">详细地址：</td>
-                    <td style="font-family:'宋体';">
-                        <input type="text" name="address" value="" class="add_ipt" />（必填）
-                    </td>
-                    <td align="right">邮政编码：</td>
-                    <td style="font-family:'宋体';">
-                        <input type="text" name="postalcode" value="" class="add_ipt" />
-                    </td>
-                </tr>
-            </table>
-            <p align="right">
-                <a href="javascript:;" class="resetEdit">取消修改</a>&nbsp; &nbsp; 
-                <a href="javascript:;" class="add_b" id="confirmEdit">确认修改</a>
-            </p> 
+                <div class="mem_tit">
+                    收货地址修改
+                </div>
+                <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="right">收货人姓名：</td>
+                        <td style="font-family:'宋体';">
+                            <input type="hidden" value="" class="hidden_id">
+                            <input type="text" name="name" value="" class="add_ipt" />（必填）
+                        </td>
+                        <td align="right">手机号码：</td>
+                        <td style="font-family:'宋体';">
+                            <input type="text" name="phone" value="" class="add_ipt" />（必填）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">详细地址：</td>
+                        <td style="font-family:'宋体';">
+                            <input type="text" name="address" value="" class="add_ipt" />（必填）
+                        </td>
+                        <td align="right">邮政编码：</td>
+                        <td style="font-family:'宋体';">
+                            <input type="text" name="postalcode" value="" class="add_ipt" />
+                        </td>
+                    </tr>
+                </table>
+                <p align="right">
+                    <a href="javascript:;" class="resetEdit">取消修改</a>&nbsp; &nbsp;
+                    <a href="javascript:;" class="add_b" id="confirmEdit">确认修改</a>
+                </p>
+            {/if}
         </div>
     </div>
-    <!--End 用户中心 End--> 
+    <!--End 用户中心 End-->
     <script src="__PUBLIC__/plugins/layer/layer.js"></script>
     <script>
         /**
