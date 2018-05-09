@@ -174,9 +174,12 @@ class Goods extends Base{
         $count = explode(',', $count);
         foreach ($gid as $kg => $vg) {
             $where['gid'] = $vg;
-            $hasInvertory = model('Goods')->where($where)->column('gInvertory');
-            $gInvertory = $hasInvertory[0]-$count[$kg];
-            if(!(model('Goods')->updateInvertory($where, $gInvertory))){
+            // $hasInvertory = model('Goods')->where($where)->column('gInvertory');
+            $hasInvertory = model('Goods')->where($where)->field('gInvertory, sell_count')->find();
+            // $gInvertory = $hasInvertory['gInvertory']-$count[$kg];
+            $updateData['gInvertory'] = $hasInvertory['gInvertory']-$count[$kg];
+            $updateData['sell_count'] = $hasInvertory['sell_count']+$count[$kg];
+            if(!(model('Goods')->updateInvertory($where, $updateData))){
                 $bool = false;
             }
             if(!$bool){
@@ -201,9 +204,11 @@ class Goods extends Base{
         $count = explode(',', $count);
         foreach ($gid as $kg => $vg) {
             $where['gid'] = $vg;
-            $hasInvertory = model('Goods')->where($where)->column('gInvertory');
-            $gInvertory = $hasInvertory[0]+$count[$kg];
-            if(!(model('Goods')->updateInvertory($where, $gInvertory))){
+            $hasInvertory = model('Goods')->where($where)->field('gInvertory, sell_count')->find();
+            // $gInvertory = $hasInvertory[0]+$count[$kg];
+            $updateData['gInvertory'] = $hasInvertory['gInvertory']+$count[$kg];
+            $updateData['sell_count'] = $hasInvertory['sell_count']-$count[$kg];
+            if(!(model('Goods')->updateInvertory($where, $updateData))){
                 $bool = false;
             }
             if(!$bool){
@@ -283,7 +288,7 @@ class Goods extends Base{
         }else{
             $this->init();
             $oId = input('id');
-            if($oId){
+            if(!$oId){
                 // 最新生成的订单
                 $orderMap['uid'] = $this->uid;
                 $orderData = model('Order')->getOrder($orderMap, 'id desc');

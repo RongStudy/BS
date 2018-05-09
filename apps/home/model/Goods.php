@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace app\home\model;
 use think\Model;
 
@@ -30,17 +30,35 @@ class Goods extends Model{
         return \think\Db::table($this->table)->field($field)->where($map)->select();
     }
 
+    /**
+     * [getSearch 搜索商品]
+     * @param  [type] $map   [description]
+     * @param  string $field [description]
+     * @return [type]        [description]
+     */
     public function getSearch($map, $field = '*'){
         return \think\Db::table($this->table)->field($field)->where($map)->select();
     }
 
+    /**
+     * [getSearchOrder 有排序的搜索商品]
+     * @param  [type] $order [description]
+     * @param  [type] $map   [description]
+     * @param  string $field [description]
+     * @return [type]        [description]
+     */
     public function getSearchOrder($order, $map, $field = '*'){
         return \think\Db::table($this->table)->field($field)->where($map)->order($order)->select();
     }
 
-    // 更新库存
-    public function updateInvertory($where, $gInvertory){
-        return \think\Db::table($this->table)->where($where)->update(['gInvertory'=>$gInvertory]);
+    /**
+     * [updateInvertory 更新库存]
+     * @param  [type] $where      [description]
+     * @param  [type] $updateData [description]
+     * @return [type]             [description]
+     */
+    public function updateInvertory($where, $updateData){
+        return \think\Db::table($this->table)->where($where)->update($updateData);
     }
 }
 
