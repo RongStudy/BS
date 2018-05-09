@@ -14,21 +14,21 @@
 </style>
 <!--Begin Header Begin-->
 
-<!--End Menu End--> 
+<!--End Menu End-->
 <div class="i_bg bg_color">
 	<div class="i_ban_bg">
 		<!--Begin Banner Begin-->
-    	<div class="banner">    	
+    	<div class="banner">
             <div class="top_slide_wrap">
                 <ul class="slide_box bxslider">
                     <li><img src="{$static}/images/ban1.jpg" width="740" height="401" /></li>
-                    <li><img src="{$static}/images/ban1.jpg" width="740" height="401" /></li> 
-                    <li><img src="{$static}/images/ban1.jpg" width="740" height="401" /></li> 
-                </ul>	
+                    <li><img src="{$static}/images/ban1.jpg" width="740" height="401" /></li>
+                    <li><img src="{$static}/images/ban1.jpg" width="740" height="401" /></li>
+                </ul>
                 <div class="op_btns clearfix">
                     <a href="#" class="op_btn op_prev"><span></span></a>
                     <a href="#" class="op_btn op_next"><span></span></a>
-                </div>        
+                </div>
             </div>
         </div>
         <script type="text/javascript">
@@ -62,7 +62,7 @@
                 <span class="fr">16R</span>
             </div>
         </div> -->
-        <!-- <div class="hot_pro">        	
+        <!-- <div class="hot_pro">
         	<div id="featureContainer">
                 <div id="feature">
                     <div id="block">
@@ -73,7 +73,7 @@
                                     	<div class="h_icon"><img src="{$static}/images/hot.png" width="50" height="50" /></div>
                                         <div class="imgbg">
                                         	<a href="#"><img src="{$static}/images/hot1.jpg" width="160" height="136" /></a>
-                                        </div>                                        
+                                        </div>
                                         <div class="name">
                                         	<a href="#">
                                             <h2>德国进口</h2>
@@ -90,7 +90,7 @@
                                         <div class="h_icon"><img src="{$static}/images/hot.png" width="50" height="50" /></div>
                                         <div class="imgbg">
                                         	<a href="#"><img src="{$static}/images/hot2.jpg" width="160" height="136" /></a>
-                                        </div>                                        
+                                        </div>
                                         <div class="name">
                                         	<a href="#">
                                             <h2>iphone 6S</h2>
@@ -107,7 +107,7 @@
                                         <div class="h_icon"><img src="{$static}/images/hot.png" width="50" height="50" /></div>
                                         <div class="imgbg">
                                         	<a href="#"><img src="{$static}/images/hot3.jpg" width="160" height="136" /></a>
-                                        </div>                                        
+                                        </div>
                                         <div class="name">
                                         	<a href="#">
                                             <h2>倩碧特惠组合套装</h2>
@@ -124,7 +124,7 @@
                                         <div class="h_icon"><img src="{$static}/images/hot.png" width="50" height="50" /></div>
                                         <div class="imgbg">
                                         	<a href="#"><img src="{$static}/images/hot4.jpg" width="160" height="136" /></a>
-                                        </div>                                        
+                                        </div>
                                         <div class="name">
                                         	<a href="#">
                                             <h2>品利特级橄榄油</h2>
@@ -190,10 +190,10 @@
                             html +=                     down_type[j].title+'/';
                             html +=                 '</h2>';
                             }
-                            
+
 
                             html +=             '</div>';
-                            
+
 
                             html +=         '</div>';
                             html +=     '</div">';
@@ -205,7 +205,7 @@
                 }
             });
         }
-        
+
         /**
          * [getFloor 获取楼层商品]
          * @return {[json]}
@@ -221,6 +221,7 @@
                     var data      = ret.data.goods;
                     var data_type = ret.data.goods_type;
                     // var moreUrl = '/Goods/searchList/type/';
+                    console.log(data);
                     console.log(data_type);
                     if(ret.status == 1){
                         for(var i in data_type){
@@ -246,7 +247,6 @@
                                                                 }else{
                                                                     break;
                                                                 }
-                                
                                                             }
                                                         }
                                 html +=                 '</div>';
@@ -254,12 +254,14 @@
                                 html +=         '</div>';
                                 html +=         '<div class="fresh_mid">';
                                 html +=             '<ul>';
+                                var count = 0;
                                 for(var j in data){
-                                    if(j>5){
+                                    if(count > 6){
                                         break;
                                     }
                                     var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
                                     if(data[j].gType == data_type[i].id){
+                                        count++;
                                         html +=             '<li>';
                                         html +=                 '<div class="name"><a href="'+url+'">'+data[j].gTitle+'</a></div>';
                                         html +=                 '<div class="price">';
@@ -282,7 +284,7 @@
     </script>
     <!--Begin Footer Begin -->
     {include file='base/footer' /}
-    <!--End Footer End -->    
+    <!--End Footer End -->
 </div>
 
 {/block}
