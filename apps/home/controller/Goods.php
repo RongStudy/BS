@@ -60,6 +60,33 @@ class Goods extends Base{
 
             $this->assign('img_path', $img_true_path);
             $this->assign('img_thumb_path', $img_thumb_path);
+
+            // 用户还喜欢
+            $goods_type = $goods_data2['gType'];
+            $getPidMap['id'] = $goods_type;
+            $pid = model('GoodsType')->getPid($getPidMap);
+            if($pid[0] != '0'){
+                $goods_type = $pid[0];
+            }
+            $like_goods = model('Goods')->getLike(['gType'=>$goods_type, 'sell_count'=>['neq', 0]]);
+            // 图片
+            $lg_img = array_column($like_goods, 'gImg');
+            $temp_lg_img = array();
+            foreach ($lg_img as $key => $value) {
+                $temp_lg_img[] = explode(',', $value)[0];
+                $like_goods[$key]['imgId'] = explode(',', $value)[0];
+            }
+            $lg_img = implode(',', $temp_lg_img);
+            $goodsImg = model('Attach')->getGoodsImg(['id'=>['in', $lg_img]]);
+            $img = photoPath2($goodsImg ,1);
+            foreach ($like_goods as $key => $value) {
+                foreach ($img as $k => $v) {
+                    if($v['img_id'] == $value['imgId']){
+                        $like_goods[$key]['thumb'] = $v['thumb_p'];
+                    }
+                }
+            }
+            $this->assign('like_goods', $like_goods);
         }else{
             $this->error('系统出错,请稍后重试');
         }

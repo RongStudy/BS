@@ -60,6 +60,15 @@ class Goods extends Model{
     public function updateInvertory($where, $updateData){
         return \think\Db::table($this->table)->where($where)->update($updateData);
     }
+
+    /**
+     * [getLike 获取当前分类下销量最高的两个商品]
+     * @param  [type] $where [description]
+     * @return [type]        [description]
+     */
+    public function getLike($where){
+        return \think\Db::table($this->table)->where($where)->order('sell_count desc')->limit(2)->select();
+    }
 }
 
 
