@@ -196,7 +196,9 @@ function think_encrypt($data, $key = '', $expire = 0) {
     for ($i = 0; $i < $len; $i++) {
         $str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1)))%256);
     }
-    return str_replace(array('+','/','='),array('-','_',''),base64_encode($str));
+    $returnStr = str_replace(array('+','/','='),array('-','_',''),base64_encode($str));
+    $returnStr = $returnStr.make_random(5, false);
+    return $returnStr;
 }
 
 /**
@@ -206,6 +208,7 @@ function think_encrypt($data, $key = '', $expire = 0) {
  * return string
 */
 function think_decrypt($data, $key = ''){
+    $data = substr($data, 0, -5);
     $key = md5(empty($key) ? config('DATA_AUTH_KEY') : $key);
     $data = str_replace(array('-','_'),array('+','/'),$data);
     $mod4 = strlen($data) % 4;
