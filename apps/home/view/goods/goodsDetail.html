@@ -105,11 +105,11 @@
 					{foreach name="like_goods" item="lg"}
 					<li>
 	                    <div class="img">
-	                    	<a href="{:url("Goods/goodsDetail", array('gid'=>think_encrypt($lg['gid'])))}">
+	                    	<a href="{:url("Goods/goodsDetail", array('gid'=>think_encrypt($lg['gid'], config('url_key'))))}">
 	                    		<img src="{$lg.thumb}" width="185" height="162" />
 	                    	</a>
 	                    </div>
-	                	<div class="name"><a href="{:url("Goods/goodsDetail", array('gid'=>think_encrypt($lg['gid'])))}">{$lg.gTitle}</a></div>
+	                	<div class="name"><a href="{:url("Goods/goodsDetail", array('gid'=>think_encrypt($lg['gid'], config('url_key'))))}">{$lg.gTitle}</a></div>
 	                    <div class="price">
 	                    	<font>￥<span>{$lg.gPrice}</span></font>
 	                    </div>

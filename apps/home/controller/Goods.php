@@ -36,7 +36,9 @@ class Goods extends Base{
 
         $gid = input('gid');
         if($gid){
-            $gid = think_decrypt($gid, config('url_key'));
+            if(!preg_match("/^\d*$/",$gid)){
+                $gid = think_decrypt($gid, config('url_key'));
+            }
             $goodsModel  = model('goods');
             $attachModel = model('Attach');
 
@@ -66,7 +68,7 @@ class Goods extends Base{
             $goods_type = $goods_data2['gType'];
             $getPidMap['id'] = $goods_type;
             $pid = model('GoodsType')->getPid($getPidMap);
-            if($pid[0] != '0'){
+            if($pid && $pid[0] != '0'){
                 $goods_type = $pid[0];
             }
             $like_goods = model('Goods')->getLike(['gType'=>$goods_type, 'sell_count'=>['neq', 0]]);
