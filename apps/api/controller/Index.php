@@ -64,6 +64,21 @@ class Index extends Controller{
             )
         );
     }
+
+    /**
+     * [encodes 加密]
+     * @return [json] [description]
+     */
+    public function encodes(){
+        // echo config('url_key');
+        $value = input('value');
+        if($value){
+            $value = think_encrypt($value, config('url_key'));
+            return json(array('code'=>1, 'msg'=>$value));
+        }else{
+            $this->error('无参数');
+        }
+    }
 }
 
 

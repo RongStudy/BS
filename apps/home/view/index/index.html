@@ -54,15 +54,15 @@
         </div>
     </div>
     <!--Begin 热门商品 Begin-->
-    <!-- <div class="content mar_10">
-    	<div class="h_l_img">
+    <div class="content mar_10">
+    	<!-- <div class="h_l_img">
         	<div class="img"><img src="{$static}/images/l_img.jpg" width="188" height="188" /></div>
             <div class="pri_bg">
                 <span class="price fl">￥53.00</span>
                 <span class="fr">16R</span>
             </div>
-        </div>
-        <div class="hot_pro">
+        </div> -->
+        <!-- <div class="hot_pro">
         	<div id="featureContainer">
                 <div id="feature">
                     <div id="block">
@@ -143,8 +143,8 @@
                     <a class="h_next" href="javascript:void();">Next</a>
                 </div>
             </div>
-        </div>
-    </div> -->
+        </div> -->
+    </div>
     <div class="content mar_20">
     	<img src="{$static}/images/mban_1.jpg" width="1200" height="110" />
     </div>
@@ -259,8 +259,13 @@
                                     if(count > 6){
                                         break;
                                     }
-                                    var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
+                                    // var url = '{:url("Goods/goodsDetail")}'+'?gid='+data[j].gid;
+                                    // var url_gid = getEncode(data[j].gid);
+                                    // console.log(url_gid);
+
                                     if(data[j].gType == data_type[i].id){
+                                        var url_gid = getEncode(data[j].gid);
+                                        var url = '{:url("Goods/goodsDetail")}'+'?gid='+url_gid;
                                         count++;
                                         html +=             '<li>';
                                         html +=                 '<div class="name"><a href="'+url+'">'+data[j].gTitle+'</a></div>';
@@ -280,6 +285,29 @@
                     $('.floorContainer').append(html);
                 }
             })
+        }
+
+        /**
+         * 获取加密
+         * @param  {[type]} value [description]
+         * @return {[type]}       [description]
+         */
+        function getEncode(value){
+            var msg = '';
+            $.ajax({
+                type: 'post',
+                data: {'value': value},
+                dataType: 'json',
+                async: false,
+                url : '/api.php/Index/encodes',
+                success: function(ret){
+                    if(ret.code == 1){
+                        msg = ret.msg;
+                    }
+                }
+            });
+            return msg;
+
         }
     </script>
     <!--Begin Footer Begin -->

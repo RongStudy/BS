@@ -36,6 +36,7 @@ class Goods extends Base{
 
         $gid = input('gid');
         if($gid){
+            $gid = think_decrypt($gid, config('url_key'));
             $goodsModel  = model('goods');
             $attachModel = model('Attach');
 

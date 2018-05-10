@@ -55,7 +55,7 @@ function is_login_home(){
  * @param string $level level标记字段
  * @return array
  */
-function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 0) { 
+function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 0) {
     // 创建Tree
     $tree = [];
     if(is_array($list)) {
@@ -121,7 +121,7 @@ function photoPath2($data, $type = 1){
  * @param  boolean $hasSpecial [是否包含特殊字符]
  * @return [string]            [description]
  */
-function make_random( $length=8, $hasSpecial=true ){  
+function make_random( $length=8, $hasSpecial=true ){
     if(!$hasSpecial){
         // 随机数字符集，可任意添加你需要的字符
        $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's','t', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D','E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -130,13 +130,13 @@ function make_random( $length=8, $hasSpecial=true ){
          $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's','t', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D','E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y','Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@','#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '[', ']', '{', '}', '<', '>', '~', '`', '+', '=', ',', '.', ';', ':', '/', '?', '|'
         );
     }
-    $keys = array_rand($chars, $length); // 在 $chars 中随机取 $length 个数组元素键名  
-    $random = '';  
-    for($i = 0; $i < $length; $i++){  
+    $keys = array_rand($chars, $length); // 在 $chars 中随机取 $length 个数组元素键名
+    $random = '';
+    for($i = 0; $i < $length; $i++){
         $random .= $chars[$keys[$i]];  // 将 $length 个数组元素连接成字符串
-    }  
-    return $random;  
-}  
+    }
+    return $random;
+}
 
 /**
  * 商品种类
@@ -145,7 +145,7 @@ function make_random( $length=8, $hasSpecial=true ){
 function goods_type(){
     $goodsTypeModel = model('GoodsType');
     $list = $goodsTypeModel->getAll();
-    
+
     $up_type = array();
     $down_type = array();
     foreach ($list as $key => $value) {
@@ -171,4 +171,68 @@ function timeStr(){
     $return = str_replace('-', '', $date).str_replace(':', '', $time)
     ;
     return $return;
+}
+
+/**
+ * 系统加密方法
+ * @param string $data 要加密的字符串
+ * @param string $key 加密密钥
+ * @param int $expire 过期时间 单位 秒
+ * return string
+*/
+function think_encrypt($data, $key = '', $expire = 0) {
+    $key = md5(empty($key) ? config('DATA_AUTH_KEY') : $key);
+    $data = base64_encode($data);
+    $x = 0;
+    $len = strlen($data);
+    $l = strlen($key);
+    $char = '';
+    for ($i = 0; $i < $len; $i++) {
+        if ($x == $l) $x = 0;
+        $char .= substr($key, $x, 1);
+        $x++;
+    }
+    $str = sprintf('%010d', $expire ? $expire + time():0);
+    for ($i = 0; $i < $len; $i++) {
+        $str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1)))%256);
+    }
+    return str_replace(array('+','/','='),array('-','_',''),base64_encode($str));
+}
+
+/**
+ * 系统解密方法
+ * @param string $data 要解密的字符串 （必须是think_encrypt方法加密的字符串）
+ * @param string $key 加密密钥
+ * return string
+*/
+function think_decrypt($data, $key = ''){
+    $key = md5(empty($key) ? config('DATA_AUTH_KEY') : $key);
+    $data = str_replace(array('-','_'),array('+','/'),$data);
+    $mod4 = strlen($data) % 4;
+    if ($mod4) {
+        $data .= substr('====', $mod4);
+    }
+    $data = base64_decode($data);
+    $expire = substr($data,0,10);
+    $data = substr($data,10);
+    if($expire > 0 && $expire < time()) {
+        return '';
+    }
+    $x = 0;
+    $len = strlen($data);
+    $l = strlen($key);
+    $char = $str = '';
+    for ($i = 0; $i < $len; $i++) {
+        if ($x == $l) $x = 0;
+        $char .= substr($key, $x, 1);
+        $x++;
+    }
+    for ($i = 0; $i < $len; $i++) {
+        if (ord(substr($data, $i, 1))<ord(substr($char, $i, 1))) {
+            $str .= chr((ord(substr($data, $i, 1)) + 256) - ord(substr($char, $i, 1)));
+        }else{
+            $str .= chr(ord(substr($data, $i, 1)) - ord(substr($char, $i, 1)));
+        }
+    }
+    return base64_decode($str);
 }

@@ -169,6 +169,7 @@ return [
     // +----------------------------------------------------------------------
     'enstring'               => 'uiw875jghui891y7tfajnvhu78rufy21',
     'url_domain'             => $url_domain,
+    'url_key'                => 'fbajksfadklstg',
 
     // +----------------------------------------------------------------------
     // | 日志设置
@@ -250,7 +251,7 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
-    
+
     'captcha'                 => [
         //验证码字符集合
         'codeSet'    => '2345678abcdefhjkmnpqrstuvwxyzABCEFHJKLMNPRTUVWXY',
