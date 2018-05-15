@@ -1,0 +1,86 @@
+{extend name="base/main"}
+{block name="body"}
+<script type="text/javascript" src="__PUBLIC__/js/echarts.common.min.js"></script>
+<style type="text/css">
+    #main>div{
+        margin: auto;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i>收入统计
+    <span class="c-gray en">&gt;</span> 收入统计
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+   <div id="main" style="width: auto; height: 400px;"></div>
+</div>
+ 
+<script>
+    var myDate = new Date();
+    // 获取前7天日期
+    /*******start*******/
+    myDate.setDate(myDate.getDate() - 7);
+    var date7 = [];
+    var dateTemp;
+    var flag = 1;
+    for (var i = 0; i < 7; i++) {
+        dateTemp = (myDate.getMonth()+1)+"月"+myDate.getDate()+"日";
+        date7.push(dateTemp);
+        myDate.setDate(myDate.getDate() + flag);
+    }
+
+
+    // 初始化 echarts
+    var chart = echarts.init(document.getElementById('main'));
+
+    // 指定图表配置项和数据
+    var option = {
+        title: {
+            text: '收入统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['收入金额']
+        },
+        xAxis: {
+            data: date7
+        },
+        yAxis: {
+            type: 'value',
+        },
+        series: [{
+            name: '收入',
+            type: 'line',
+            data: getIncome(7),
+            smooth: true
+        }]
+    };
+    chart.setOption(option);
+
+    function getIncome(day){
+        var echo = '';
+        $.ajax({
+            type: 'get',
+            data: {'day':day},
+            dataType: 'json',
+            async: false,
+            url:  '{:url("Income/incomeData")}',
+            success: function(ret){
+                echo = ret;
+            }
+        });
+        return echo;
+    }
+
+    $(window).resize(function(){
+        $('#main>div').css('margin', 'auto');
+    });
+
+</script>
+
+{/block}

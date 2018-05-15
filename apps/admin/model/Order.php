@@ -27,6 +27,15 @@ class Order extends Model{
     public function sendOrder($id, $data){
         return \think\Db::table($this->table)->where(array('id'=>$id))->update($data);
     }
+
+    /**
+     * 统计收入
+     * @param  [type] $where [description]
+     * @return [type]        [description]
+     */
+    public function getIncome($where, $field){
+        return \think\Db::table($this->table)->where($where)->field($field)->select();
+    }
     
 }
 
