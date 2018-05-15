@@ -83,7 +83,7 @@
                     {/if}
                 </td>
                 <td class="td-manage">
-                    {if condition="($vo.url neq 'Menu/menuList')"}
+                    {if condition="($vo.url neq 'Menu/index')"}
                         {if condition="($vo.status == 1)"}
                             <a onclick="stopOrStartMenu({$vo.id}, 2)"><i class="Hui-iconfont">&#xe631;</i>停用</a>
                             {else /}
