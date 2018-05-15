@@ -321,6 +321,7 @@ class Goods extends Base{
             if(!$oId){
                 // 最新生成的订单
                 $orderMap['uid'] = $this->uid;
+                $orderMap['pay_status'] = 0;
                 $orderData = model('Order')->getOrder($orderMap, 'id desc');
             }else{
                 $map['id'] = $oId;
@@ -358,6 +359,11 @@ class Goods extends Base{
             // 收货地址
             $addressList = model('Address')->where(['uid'=>$this->uid])->select();
             $this->assign('address',$addressList);
+            
+            // 禁止浏览器后退
+            if(!$goodsList){ 
+                $this->redirect('Index/index');
+            }
             $this->assign('no_show_order', '1');
             return $this->fetch();
         }

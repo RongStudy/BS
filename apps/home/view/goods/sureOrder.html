@@ -70,7 +70,10 @@
                     </div>
                     <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
                         <tr>
-                            <td colspan="3">暂无收货信息</td>
+                            <td colspan="3">
+                                <input type="hidden" class="addres" name="addres" value="0">
+                                暂无收货信息
+                            </td>
                         </tr>
                     </table>
                 {else /}
@@ -182,13 +185,19 @@
 
         // 提交
         $('.sub').click(function(){
-            var pay_name = $('#pay_name').val();
+            var address_id = $('.addres').val();     // 收货地址id
+            if(address_id == 0){
+                layer.msg('请添加收货地址', {time:1500});
+                return false;
+            }
+
+            var pay_name = $('#pay_name').val();    // 支付方式
             if(pay_name == ''){
                 layer.msg('请选择支付方式', {time: 1500});
                 return false;
             }
+
             var message = $('#message').val();  // 订单附言
-            var address_id = $('.addres').val(); //  收货地址id
             var order_id = $('input[name="order_id"]').val(); // 订单id
             $.post(
                 '{:url("Goods/sureOrder")}', 
