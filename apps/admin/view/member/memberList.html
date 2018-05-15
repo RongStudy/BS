@@ -2,6 +2,11 @@
 {block name="body"}
 <link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
 <script type="text/javascript" src="__PUBLIC__/plugins/layer/layer.js"></script>
+<style type="text/css">
+    .label-success, .label-warning, .editPwd{
+        cursor: pointer;
+    }
+</style>
 
 <nav class="breadcrumb">
     <i class="Hui-iconfont">&#xe67f;</i> 
@@ -106,7 +111,7 @@
                     </td>
                     <td>
                         {if condition="($v.user_type neq 1)"}
-                            <span onclick="editPwd({$v.username}, {$v.uid})"><i class="Hui-iconfont">&#xe605;</i>修改密码</span>
+                            <span onclick="editPwd({$v.username}, {$v.uid})" class="editPwd"><i class="Hui-iconfont">&#xe605;</i>修改密码</span>
                         {else /}
                         {/if}
                     </td>
