@@ -1,0 +1,64 @@
+{extend name="base/main"}
+{block name="body"}
+<style type="text/css">
+    a{
+        text-decoration: none!important;
+    }
+    .red{
+        color: red;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 文章管理 
+    <span class="c-gray en">&gt;</span> 文章列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<div class="page-container">
+    <!-- <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+            </a>
+            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            </a>
+        </span>
+    </div> -->
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+            <tr>
+                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong>{php}echo count($list);{/php}</strong> 条</span></th>
+            </tr>
+            <tr class="text-c">
+                <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+                <th width="30%">标题</th>
+                <th width="10%">操作</th>
+            </tr>
+            
+        </thead>
+        <tbody>
+    	{foreach name="list" item="v"}
+        <tr class="text-c">
+        	<td>{$v.title}</td>
+        	<td>
+        		{eq name="$v['is_show']" value="1"}
+        		<i class="Hui-iconfont">&#xe6a6;</i>取消展示
+        		{else /}
+        		<i class="Hui-iconfont">&#xe6a7;</i>展示
+        		{/eq}
+        	</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
+<script>
+    
+</script>
+
+{/block}
