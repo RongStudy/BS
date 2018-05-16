@@ -1,0 +1,58 @@
+{extend name="base/main"}
+{block name="body"}
+<style type="text/css">
+    .container{
+        margin-top: 20px;
+    }
+    .left_div{
+        width: 85%
+    }
+    .new_title{
+        text-align: center;
+        font-size: 20px;
+    }
+</style>
+
+<div class="soubg">
+    <div class="sou">
+        <span class="fr">
+            <span class="fl">
+                你好，
+                {if condition="(!empty($info))"}
+                    欢迎&nbsp;{$info.username}&nbsp;
+                    <a href="{:url('AuthMember/logout')}" style="color:#ff4e00;">退出登录</a>&nbsp;|&nbsp;
+                    {else /}
+                    请<a href="{:url('AuthMember/login')}">登录</a>
+                    <a href="{:url('AuthMember/register')}" style="color:#ff4e00;">免费注册</a>&nbsp;|&nbsp;
+                {/if}
+                
+                <a href="{:url('Goods/myOrder')}">我的订单</a>&nbsp;|
+                <a href="{:url('Goods/listCart')}">购物车</a>&nbsp;|
+            </span>
+            <!-- <span class="ss" style="width: auto;">
+                <div class="ss_list">
+                    <a href="#">我的收藏</a>
+                </div>
+            </span> -->
+            <span class="fl">&nbsp;关注我：</span>
+            <span class="s_sh"><a href="#" class="sh2">微信</a></span>
+        </span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="fl left_div">
+        <div class="new_title">标题</div>
+        <div class="new_content"></div>
+    </div>
+    <div class="fr right_div">dd</div>
+</div>
+
+<div class="i_bg bg_color">
+
+    <script type="text/javascript">
+        
+    </script>
+</div>
+
+{/block}

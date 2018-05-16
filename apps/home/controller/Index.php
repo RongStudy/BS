@@ -21,6 +21,13 @@ class Index extends Base{
         $this->assign('goods_data', $goods_data);
         return $this->fetch();
     }
+
+    public function news(){
+        if(!empty(session('home'))){
+            $this->assign('info', session('home.user_auth'));
+        }
+        return $this->fetch();
+    }
 }
 
  ?>
