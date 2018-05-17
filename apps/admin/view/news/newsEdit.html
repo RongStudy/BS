@@ -63,17 +63,17 @@
 <body>
 	<div class="container">
 		<div class="title">
-			<input type="text" class="ipt_title" name="title" placeholder="请输入文章标题">
+			<input type="text" class="ipt_title" name="title" value="{$data.title}" placeholder="请输入文章标题">
 		</div>
-		<div class="content" id="content">
-			
-		</div>
+		<input type="hidden" name="hidden_content" value="<?php echo htmlspecialchars($data['content']);?>">
+		<input type="hidden" name="hidden_id" value="{$data.id}">
+		<div class="content" id="content"></div>
 		<div class="btn_div">
 			<button class="btn_ btn_success" id="sub">
 				提交
 			</button>
 			<button class="btn_" id="reset">
-				清空
+				重置
 			</button>
 		</div>
 	</div>
@@ -81,6 +81,13 @@
 <script type="text/javascript" src="__PUBLIC__/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script> 
 <script type="text/javascript">
+	$(function(){
+		UE.getEditor('content').addListener('ready', function(){
+			var content = $('input[name="hidden_content"]').val();
+			UE.getEditor('content').execCommand('inserthtml', content);
+		})
+	});
+
 	// layer弹框
 	function layMsg(msg, data){
 		var data = arguments[1] ? arguments[1] : '';
@@ -99,15 +106,14 @@
 
 	// 实例化UE
 	var ue = UE.getEditor('content');
-
 	// 清空表单
 	$('#reset').click(function(){
-		$('.ipt_title').val('');
-		ue.setContent('');
+		location.reload();
 	});
 	
 	// 提交表单
 	$('#sub').click(function(){
+		var ids = $('input[name="hidden_id"]').val();
 		var title = $('.ipt_title').val();
 		var ret = layMsg('请填写文章标题', title);
 		if(!ret){return false;}
@@ -119,15 +125,15 @@
 		}
 		var content = ue.getContent(); // 获取文章内容
 		var objStr = {
-			'title': title,
+			'ids'    : ids,
+			'title'  : title,
 			'content': content,
 		};
-		$.post('{:url("News/newsOperation")}', objStr, function(ret){
+		$.post('{:url("News/editNews")}', objStr, function(ret){
 			if(ret.code == 1){
 				layer.msg(ret.msg, {time:1500}, function(){
-					layer.closeAll();
-					window.parent.location.reload();
-				})
+					window.location.href='{:url("News/showDetail")}'+'?id='+ids+'&is_edit='+'1';
+				});
 			}else{
 				layMsg(ret.msg);
 				return;

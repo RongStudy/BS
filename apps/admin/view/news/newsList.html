@@ -7,6 +7,12 @@
     .red{
         color: red;
     }
+    .pointer{
+    	cursor: pointer;
+    }
+    .btn-danger-outline:hover{
+    	color: white;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/layui/css/layui.css">
 <link rel="stylesheet" type="text/css" href="{$static}/css/pagination.css" />
@@ -18,47 +24,90 @@
     </a>
 </nav>
 <div class="page-container">
-    <!-- <div class="cl pd-5 bg-1 bk-gray">
+    <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除
-            </a>
-            <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius">
-                <i class="Hui-iconfont">&#xe600;</i> 添加菜单
+            <a href="javascript:;" onclick="addNews()" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i> 新建文章
             </a>
         </span>
-    </div> -->
+    </div>
     <table class="table table-border table-bordered table-bg">
         <thead>
             <tr>
-                <th scope="col" colspan="9">菜单列表<span class="r">共有数据：<strong>{php}echo count($list);{/php}</strong> 条</span></th>
+                <th scope="col" colspan="9">文章列表<span class="r">共有数据：<strong>{php}echo count($list);{/php}</strong> 条</span></th>
             </tr>
             <tr class="text-c">
                 <!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
                 <th width="30%">标题</th>
                 <th width="10%">操作</th>
             </tr>
-            
         </thead>
         <tbody>
     	{foreach name="list" item="v"}
         <tr class="text-c">
-        	<td>{$v.title}</td>
+        	<td><a href="{:url('News/showDetail',['id'=>$v['id']])}">{$v.title}</a></td>
         	<td>
         		{eq name="$v['is_show']" value="1"}
-        		<i class="Hui-iconfont">&#xe6a6;</i>取消展示
+        		<span onclick="is_show('no', {$v.id})" class="pointer btn btn-danger-outline radius size-S"><i class="Hui-iconfont">&#xe6a6;</i>展示</span>
         		{else /}
-        		<i class="Hui-iconfont">&#xe6a7;</i>展示
+        		<span onclick="is_show('yes', {$v.id})" class="pointer btn btn-primary-outline radius size-S"><i class="Hui-iconfont">&#xe6a7;</i>展示</span>
         		{/eq}
+                <span onclick="delThis({$v.id})" class="pointer btn btn-danger-outline radius size-S"><i class="Hui-iconfont">&#xe609;</i>删除</span>
+        		<a href="{:url('News/editNews', ['id'=>$v['id']])}"><span class="pointer btn btn-danger-outline radius size-S"><i class="Hui-iconfont">&#xe609;</i>编辑</span></a>
         	</td>
         </tr>
         {/foreach}
         </tbody>
     </table>
+    {$list->render()}
 </div>
 <script type="text/javascript" src="{$static}/h_ui/lib/layer/2.4/layer.js"></script>  
 <script>
-    
+
+	// 新建文章
+    function addNews(){
+		var index = layer.open({
+		  type: 2,
+		  title: '新建文章',
+		  shadeClose: true,
+		  shade: 0.8,
+		  area: ['500px','700px'],
+		  maxmin: true,
+		  content: '{:url("News/newsOperation")}' //iframe的url
+		});
+		layer.full(index);
+    }
+
+    // 新闻展示控制
+    function is_show(data, ids){
+    	$.post('{:url("News/controlShow")}', {'data':data, 'ids':ids}, function(ret){
+    		if(ret.code == 1){
+    			layer.msg(ret.msg, {time:1500}, function(){
+    				location.reload();
+    			});
+    		}else{
+    			layer.msg(ret.msg);return;
+    		}
+    	}, 'json');
+    }
+
+    // 删除新闻
+    function delThis(ids){
+        layer.confirm('是否要删除该文章', {
+            title: '',
+            btn: ['是', '否']
+        },function(){
+            $.post('{:url("News/delNews")}', {'ids': ids}, function(ret){
+                if(ret.code == 1){
+                    layer.msg(ret.msg, {time:1500}, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(ret.msg);return;
+                }
+            }, 'json');
+        })
+    } 
 </script>
 
 {/block}
