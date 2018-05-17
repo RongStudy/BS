@@ -1,6 +1,7 @@
 <?php
 namespace app\api\controller;
 use think\Controller;
+use think\Db;
 
 class Index extends Controller{
 
@@ -79,7 +80,26 @@ class Index extends Controller{
             $this->error('无参数');
         }
     }
+
+    /**
+     * 获取文章
+     */
+    public function newsDataTitle(){
+        $newsModel = Db::table('bs_news');
+        $field = 'id, title';
+        $map['is_show'] = array('eq', 1);
+
+        $list = $newsModel->where($map)->field($field)->select();
+        if($list){
+            return json(
+                array(
+                    'code' => '1',
+                    'msg'  => $list
+                )
+            );
+        }else{
+            $this->error('暂无数据');
+        }
+    }
 }
-
-
 ?>

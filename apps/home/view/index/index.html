@@ -44,12 +44,12 @@
         	<div class="news_t">
             	<span class="fr"><a href="#">更多 ></a></span>新闻资讯
             </div>
-            <ul>
-            	<li><span>[ 特惠 ]</span><a href="#">掬一轮明月 表无尽惦念</a></li>
+            <ul id="news_title">
+            	<!-- <li><span>[ 特惠 ]</span><a href="#">掬一轮明月 表无尽惦念</a></li>
             	<li><span>[ 公告 ]</span><a href="#">好奇金装成长裤新品上市</a></li>
             	<li><span>[ 特惠 ]</span><a href="#">大牌闪购 · 抢！</a></li>
             	<li><span>[ 公告 ]</span><a href="#">发福利 买车就抢千元油卡</a></li>
-            	<li><span>[ 公告 ]</span><a href="#">家电低至五折</a></li>
+            	<li><span>[ 公告 ]</span><a href="#">家电低至五折</a></li> -->
             </ul>
         </div>
     </div>
@@ -154,6 +154,7 @@
         $(function(){
             // getType();  // 获取商品种类
             getFloor(); // 获取楼层商品
+            getNews(); // 获取文章
         });
 
         /**
@@ -190,8 +191,6 @@
                             html +=                     down_type[j].title+'/';
                             html +=                 '</h2>';
                             }
-
-
                             html +=             '</div>';
 
 
@@ -221,8 +220,8 @@
                     var data      = ret.data.goods;
                     var data_type = ret.data.goods_type;
                     // var moreUrl = '/Goods/searchList/type/';
-                    console.log(data);
-                    console.log(data_type);
+                    // console.log(data);
+                    // console.log(data_type);
                     if(ret.status == 1){
                         for(var i in data_type){
                             if(data_type[i].pid == 0){
@@ -288,6 +287,33 @@
         }
 
         /**
+         * 获取文章记录
+         */
+        function getNews(){
+            $.ajax({
+                type: 'get',
+                url: '/api.php/Index/newsDataTitle',
+                dataType: 'json',
+                success: function(ret){
+                    if(ret.code == 1){
+                        var html = '';
+                        console.log(ret.msg);
+                        for(var i in ret.msg){
+                            var id = getEncode(ret.msg[i].id);
+                            var url = '{:url("Index/newsDetail")}'+"?id="+id;
+                            var title = ret.msg[i].title;
+                            if(title.length > 6){
+                                title = title.substr(0, 6)+'...';
+                            }
+                            html+= '<li><span>[ 特惠 ]</span><a href="'+url+'">'+title+'</a></li>'
+                        }
+                        $('#news_title').append(html);
+                    }
+                }
+            });
+        }
+
+        /**
          * 获取加密
          * @param  {[type]} value [description]
          * @return {[type]}       [description]
@@ -307,7 +333,6 @@
                 }
             });
             return msg;
-
         }
     </script>
     <!--Begin Footer Begin -->

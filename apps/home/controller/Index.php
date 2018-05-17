@@ -1,5 +1,6 @@
 <?php 
 namespace app\home\controller;
+use think\Db;
 
 class Index extends Base{
     public function index(){
@@ -22,11 +23,32 @@ class Index extends Base{
         return $this->fetch();
     }
 
-    public function news(){
+    /**
+     * 文章详情
+     */
+    public function newsDetail(){
         if(!empty(session('home'))){
             $this->assign('info', session('home.user_auth'));
         }
-        return $this->fetch();
+
+        $newsModel = model('News');
+        $id = input('id');
+        
+        if($id){
+            $id = think_decrypt($id, config('url_key'));
+        }else{
+            $this->error('非法请求');
+        }
+        $data = $newsModel->where(['id'=>$id])->find();
+        if($data['is_show'] != 1){
+            $this->error('此文章不被展示', 'Index');
+        }else{
+            $newsModel->where(['id'=>$id])->setInc('show_count');
+            $list = $newsModel->where(['is_show'=>1])->order('show_count desc')->select();
+            $this->assign('list', $list);
+            $this->assign('data', $data);
+            return $this->fetch('news');
+        }
     }
 }
 
